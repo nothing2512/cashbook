@@ -27,6 +27,9 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    secretKey: process.env.SECRET_KEY
+    public: {
+      supabaseUrl: process.env.SUPABASE_URL,
+      supabaseApiKey: process.env.SUPABASE_API_KEY
+    }
   }
 })
