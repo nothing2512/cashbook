@@ -59,3 +59,186 @@ create policy "transactions policy" on transactions for all to authenticated usi
 -- default data
 INSERT INTO savings (name, num, amount) VALUES ('Cash', '', 0);
 INSERT INTO categories (name) VALUES ('default');
+
+-- views
+CREATE OR REPLACE VIEW transaction_views AS
+SELECT t.*, COALESCE(SUM(t.amount), 0) AS child_amount
+FROM transactions t
+LEFT JOIN transactions t2 ON t2.parent_id = t.id
+GROUP BY t.id;
+
+ALTER VIEW transaction_views SET (security_invoker = true);
+GRANT SELECT ON transaction_views TO authenticated;
+
+CREATE OR REPLACE VIEW monthly_report AS
+SELECT 
+    EXTRACT(MONTH FROM transaction_date) AS month,
+    EXTRACT(YEAR FROM transaction_date) AS year,
+    kind,
+    SUM(amount) AS total_amount
+FROM transactions
+WHERE parent_id IS NOT NULL
+GROUP BY 
+    EXTRACT(YEAR FROM transaction_date),
+    EXTRACT(MONTH FROM transaction_date),
+    kind;
+
+ALTER VIEW monthly_report SET (security_invoker = true);
+GRANT SELECT ON monthly_report TO authenticated;
+
+CREATE OR REPLACE VIEW daily_report AS
+SELECT 
+    EXTRACT(DAY FROM transaction_date) AS day,
+    EXTRACT(MONTH FROM transaction_date) AS month,
+    EXTRACT(YEAR FROM transaction_date) AS year,
+    kind,
+    SUM(amount) AS total_amount
+FROM transactions
+WHERE parent_id IS NOT NULL
+GROUP BY 
+    EXTRACT(DAY FROM transaction_date),
+    EXTRACT(YEAR FROM transaction_date),
+    EXTRACT(MONTH FROM transaction_date),
+    kind;
+
+ALTER VIEW daily_report SET (security_invoker = true);
+GRANT SELECT ON daily_report TO authenticated;
+
+-- ======================================
+-- HELPER FUNCTION: CHECK & UPDATE PARENT
+-- ======================================
+CREATE OR REPLACE FUNCTION check_and_update_parent(p_parent_id BIGINT)
+RETURNS VOID AS $$
+DECLARE
+    v_parent_amount NUMERIC;
+    v_sum_child NUMERIC;
+BEGIN
+    IF p_parent_id IS NULL THEN
+        RETURN;
+    END IF;
+
+    SELECT amount INTO v_parent_amount
+    FROM transactions
+    WHERE id = p_parent_id;
+
+    SELECT COALESCE(SUM(amount), 0) INTO v_sum_child
+    FROM transactions
+    WHERE parent_id = p_parent_id;
+
+    IF v_sum_child = v_parent_amount THEN
+        UPDATE transactions
+        SET status = 'paid'
+        WHERE id = p_parent_id;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- =========================
+-- FUNCTION: AFTER INSERT
+-- =========================
+CREATE OR REPLACE FUNCTION trg_transactions_after_insert_fn()
+RETURNS TRIGGER AS $$
+DECLARE
+    v_amount NUMERIC;
+BEGIN
+    IF NEW.kind = 'income' THEN
+        v_amount := NEW.amount;
+    ELSE
+        v_amount := -NEW.amount;
+    END IF;
+
+    UPDATE savings
+    SET amount = amount + v_amount
+    WHERE id = NEW.saving_id;
+
+    PERFORM check_and_update_parent(NEW.parent_id);
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER trg_transactions_after_insert
+AFTER INSERT ON transactions
+FOR EACH ROW
+EXECUTE FUNCTION trg_transactions_after_insert_fn();
+
+
+-- =========================
+-- FUNCTION: AFTER UPDATE
+-- =========================
+CREATE OR REPLACE FUNCTION trg_transactions_after_update_fn()
+RETURNS TRIGGER AS $$
+DECLARE
+    v_old_amount NUMERIC;
+    v_new_amount NUMERIC;
+BEGIN
+    -- convert OLD
+    IF OLD.kind = 'income' THEN
+        v_old_amount := OLD.amount;
+    ELSE
+        v_old_amount := -OLD.amount;
+    END IF;
+
+    -- convert NEW
+    IF NEW.kind = 'income' THEN
+        v_new_amount := NEW.amount;
+    ELSE
+        v_new_amount := -NEW.amount;
+    END IF;
+
+    -- savings update
+    IF NEW.saving_id = OLD.saving_id THEN
+        UPDATE savings
+        SET amount = amount + (v_new_amount - v_old_amount)
+        WHERE id = NEW.saving_id;
+    ELSE
+        UPDATE savings
+        SET amount = amount - v_old_amount
+        WHERE id = OLD.saving_id;
+
+        UPDATE savings
+        SET amount = amount + v_new_amount
+        WHERE id = NEW.saving_id;
+    END IF;
+
+    PERFORM check_and_update_parent(NEW.parent_id);
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE  TRIGGER trg_transactions_after_update
+AFTER UPDATE ON transactions
+FOR EACH ROW
+EXECUTE FUNCTION trg_transactions_after_update_fn();
+
+
+-- =========================
+-- FUNCTION: AFTER DELETE
+-- =========================
+CREATE OR REPLACE FUNCTION trg_transactions_after_delete_fn()
+RETURNS TRIGGER AS $$
+DECLARE
+    v_amount NUMERIC;
+BEGIN
+    IF OLD.kind = 'income' THEN
+        v_amount := OLD.amount;
+    ELSE
+        v_amount := -OLD.amount;
+    END IF;
+
+    UPDATE savings
+    SET amount = amount - v_amount
+    WHERE id = OLD.saving_id;
+
+    PERFORM check_and_update_parent(OLD.parent_id);
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER trg_transactions_after_delete
+AFTER DELETE ON transactions
+FOR EACH ROW
+EXECUTE FUNCTION trg_transactions_after_delete_fn();
