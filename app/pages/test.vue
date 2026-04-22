@@ -1,5 +1,10 @@
+<script setup>
+const config = useRuntimeConfig()
+console.log(config.secretKey)
+</script>
+
 <template>
   <div>
-        <p>test</p>
+        <p>Test</p>
   </div>
 </template>
