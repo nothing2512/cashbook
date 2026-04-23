@@ -56,7 +56,7 @@ provide('setLoading', setLoading)
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
                     <div class="auth-logo">
-                        <a href="#"><img src="/mazer/assets/compiled/png/logo.png" alt="Logo"></a>
+                        <a href="#"><img style="width: 4rem; height: auto;" src="/mazer/assets/compiled/png/logo.png" alt="Logo"></a>
                     </div>
                     <NuxtPage />
                 </div>

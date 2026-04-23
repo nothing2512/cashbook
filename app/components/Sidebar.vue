@@ -20,7 +20,7 @@ const logout = () => {
             <div class="sidebar-header position-relative">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="logo">
-                        <img src="/mazer/assets/compiled/png/logo.png" alt="Logo" srcset="">
+                        <img src="/mazer/assets/compiled/png/logo.png" alt="Logo" srcset="" style="width: 3rem; height: auto;">
                     </div>
                     <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -94,6 +94,24 @@ const logout = () => {
                             <span>Piutang</span>
                         </NuxtLink>
                     </li>
+
+                    <hr>
+
+                    <li class="sidebar-item" :class="tab == 'receivables' ? 'active' : ''">
+                        <NuxtLink href="/categories" class='sidebar-link' @click="setTab('receivables')">
+                            <i class="bi bi-tags"></i>
+                            <span>Kategori</span>
+                        </NuxtLink>
+                    </li>
+
+                    <li class="sidebar-item" :class="tab == 'receivables' ? 'active' : ''">
+                        <NuxtLink href="/accounts" class='sidebar-link' @click="setTab('receivables')">
+                            <i class="bi bi-bank"></i>
+                            <span>Akun penyimpanan</span>
+                        </NuxtLink>
+                    </li>
+
+                    <hr>
 
                     <li class="sidebar-item">
                         <NuxtLink href="/login" class='sidebar-link' @click="logout">
