@@ -11,13 +11,17 @@ definePageMeta({
 
 const email = ref('')
 const password = ref('')
+const setLoading = inject('setLoading')
 
 const login = async () => {
+    setLoading(true)
     try {
         const { data } = await fetchLogin(email.value, password.value)
+        setLoading(false)
         document.cookie = `token=${data.access_token}; path=/; max-age=${data.expires_in}; samesite=strict`
         navigateTo('/')
     } catch (e) {
+        setLoading(false)
         Swal.fire({
             title: "Gagal!",
             text: e.msg,

@@ -1,10 +1,11 @@
 <script setup>
+
 useHead({
   meta: [
     { name: 'viewport', content: 'width=device-width, initial-scale=1' }
   ],
   link: [
-    { rel: 'icon', href: '/mazer/assets/compiled/svg/logo.svg' },
+    { rel: 'icon', href: '/mazer/assets/compiled/png/logo.png' },
     { rel: "stylesheet", href: "mazer/assets/compiled/css/app.css" },
     { rel: "stylesheet", href: "mazer/assets/compiled/css/app-dark.css" },
     { rel: "stylesheet", href: "mazer/assets/compiled/css/iconly.css" },
@@ -18,6 +19,7 @@ useHead({
     { defer: true, src: "mazer/assets/compiled/js/app.js" },
     { defer: true, src: "mazer/assets/extensions/apexcharts/apexcharts.min.js" },
     { defer: true, src: "mazer/assets/static/js/pages/dashboard.js" },
+    { src: "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" },
   ]
 })
 
@@ -29,7 +31,7 @@ useSeoMeta({
   description,
   ogTitle: title,
   ogDescription: description,
-  ogImage: '/mazer/assets/compiled/svg/logo.svg',
+  ogImage: '/mazer/assets/compiled/png/logo.png',
   twitterCard: 'summary_large_image'
 })
 
@@ -50,6 +52,13 @@ if (token.value == null) {
 <script>
 
 const pageTitle = ref('Dashboard')
+const loading = ref(false)
+
+const setLoading = (status) => {
+    loading.value = status
+}
+
+provide('setLoading', setLoading)
 
 const setPageTitle = (value) => {
     if (value == 'dashboard') pageTitle.value = "Dashboard";
@@ -63,6 +72,7 @@ const setPageTitle = (value) => {
 
 <template>
     <div id="app">
+        <Loading :loading="loading" />
         <Sidebar @change="setPageTitle" />
         <div id="main">
             <header class="mb-3">
