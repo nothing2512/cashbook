@@ -4,7 +4,7 @@ useHead({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' }
     ],
     link: [
-        { rel: 'icon', href: 'dist/assets/compiled/svg/logo.svg' },
+        { rel: 'icon', href: '~/dist/assets/compiled/svg/logo.svg' },
         { rel: "stylesheet", href: "dist/assets/compiled/css/app.css" },
         { rel: "stylesheet", href: "dist/assets/compiled/css/app-dark.css" },
         { rel: "stylesheet", href: "dist/assets/compiled/css/auth.css" },
@@ -29,7 +29,7 @@ useSeoMeta({
     description,
     ogTitle: title,
     ogDescription: description,
-    ogImage: 'dist/assets/compiled/svg/logo.svg',
+    ogImage: '~/dist/assets/compiled/svg/logo.svg',
     twitterCard: 'summary_large_image'
 })
 
@@ -46,7 +46,7 @@ if (token.value != null) {
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
                     <div class="auth-logo">
-                        <a href="#"><img src="dist/assets/compiled/svg/logo.svg" alt="Logo"></a>
+                        <a href="#"><img src="~/dist/assets/compiled/svg/logo.svg" alt="Logo"></a>
                     </div>
                     <NuxtPage />
                 </div>

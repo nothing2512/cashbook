@@ -4,7 +4,7 @@ useHead({
     { name: 'viewport', content: 'width=device-width, initial-scale=1' }
   ],
   link: [
-    { rel: 'icon', href: 'dist/assets/compiled/svg/logo.svg' },
+    { rel: 'icon', href: '~/dist/assets/compiled/svg/logo.svg' },
     { rel: "stylesheet", href: "dist/assets/compiled/css/app.css" },
     { rel: "stylesheet", href: "dist/assets/compiled/css/app-dark.css" },
     { rel: "stylesheet", href: "dist/assets/compiled/css/iconly.css" },
@@ -29,7 +29,7 @@ useSeoMeta({
   description,
   ogTitle: title,
   ogDescription: description,
-  ogImage: 'dist/assets/compiled/svg/logo.svg',
+  ogImage: '~/dist/assets/compiled/svg/logo.svg',
   twitterCard: 'summary_large_image'
 })
 
