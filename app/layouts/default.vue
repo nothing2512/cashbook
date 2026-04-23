@@ -33,6 +33,13 @@ useSeoMeta({
   twitterCard: 'summary_large_image'
 })
 
+onMounted(async () => {
+  const theme = localStorage.getItem('theme')
+
+  if (theme) 
+    document.documentElement.setAttribute('data-bs-theme', theme)
+})
+
 const token = useCookie('token')
 if (token.value == null) {
   navigateTo("/login")   
