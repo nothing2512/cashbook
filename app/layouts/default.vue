@@ -35,7 +35,7 @@ useSeoMeta({
 
 const token = useCookie('token')
 if (token.value == null) {
-  // navigateTo("/login")   
+  navigateTo("/login")   
 }
 
 </script>

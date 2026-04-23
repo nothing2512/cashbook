@@ -18,12 +18,16 @@ export const useApi = () => {
     }
     
     try {
-      return await $fetch(endpoint, {
+      const response = await $fetch.raw(endpoint, {
         baseURL: config.public.supabaseUrl,
         method: method,
         body: body,
         headers: headers,
       })
+      return {
+        data: response._data,
+        headers: response.headers
+      }
     } catch (err: any) {
       if (err?.response?.status === 401) {
         const token = useCookie('token')
@@ -38,7 +42,7 @@ export const useApi = () => {
 
   const fetchLogin = async (email:string, password:string) => {
     try {
-      return await $fetch("/auth/v1/token?grant_type=password", {
+      const response = await $fetch.raw("/auth/v1/token?grant_type=password", {
         method: "POST",
         baseURL: config.public.supabaseUrl!.split("/rest/v1")[0],
         body: {
@@ -49,8 +53,12 @@ export const useApi = () => {
           "apikey": config.public.supabaseApiKey
         },
       })
+      return {
+        data: response._data,
+        headers: response.headers
+      }
     } catch (err: any) {
-      throw err
+      throw err.response._data
     }
   }
 

@@ -10,6 +10,7 @@ const setTab = (newTab) => {
 
 const logout = () => {
     document.cookie = `token=; path=/; max-age=0; samesite=strict`
+    navigateTo("/login")
 }
 </script>
 

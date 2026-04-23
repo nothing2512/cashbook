@@ -1,6 +1,7 @@
 <script setup>
 
 import { useApi } from '~/composables/useApi';
+import Swal from 'sweetalert2';
 
 const { fetchLogin } = useApi()
 
@@ -13,11 +14,16 @@ const password = ref('')
 
 const login = async () => {
     try {
-        const resp = await fetchLogin(email.value, password.value)
-        document.cookie = `token=${resp.access_token}; path=/; max-age=${resp.expires_in}; samesite=strict`
+        const { data } = await fetchLogin(email.value, password.value)
+        document.cookie = `token=${data.access_token}; path=/; max-age=${data.expires_in}; samesite=strict`
         navigateTo('/')
     } catch (e) {
-        console.log(e.message)
+        Swal.fire({
+            title: "Gagal!",
+            text: e.msg,
+            icon: "warning",
+            confirmButtonText: "OK"
+        })
     }
 }
 
