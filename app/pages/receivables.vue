@@ -1,7 +1,11 @@
-<!-- <script>
-definePageMeta({
-  layout: 'auth'
+<script setup>
+
+const props = defineProps({
+    setTab: Function,
+    setLoading: Function
 })
 
-</script> -->
+props.setTab("receivables")
+
+</script>
 <template>Receivables</template>

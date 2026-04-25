@@ -1,4 +1,12 @@
-<script>
+<script setup>
+
+const props = defineProps({
+    setTab: Function,
+    setLoading: Function
+})
+
+props.setTab("dashboard")
+
 </script>
 
 <template>

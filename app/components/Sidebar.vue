@@ -1,12 +1,8 @@
 <script setup>
-const emit = defineEmits(['change'])
 
-const tab = ref('dashboard')
-
-const setTab = (newTab) => {
-    tab.value = newTab
-    emit('change', newTab)
-}
+const { tab } = defineProps({
+    tab: String
+})
 
 const logout = () => {
     document.cookie = `token=; path=/; max-age=0; samesite=strict`
@@ -97,15 +93,15 @@ const logout = () => {
 
                     <hr>
 
-                    <li class="sidebar-item" :class="tab == 'receivables' ? 'active' : ''">
-                        <NuxtLink href="/categories" class='sidebar-link' @click="setTab('receivables')">
+                    <li class="sidebar-item" :class="tab == 'categories' ? 'active' : ''">
+                        <NuxtLink href="/categories" class='sidebar-link' @click="setTab('categories')">
                             <i class="bi bi-tags"></i>
                             <span>Kategori</span>
                         </NuxtLink>
                     </li>
 
-                    <li class="sidebar-item" :class="tab == 'receivables' ? 'active' : ''">
-                        <NuxtLink href="/accounts" class='sidebar-link' @click="setTab('receivables')">
+                    <li class="sidebar-item" :class="tab == 'accounts' ? 'active' : ''">
+                        <NuxtLink href="/accounts" class='sidebar-link' @click="setTab('accounts')">
                             <i class="bi bi-bank"></i>
                             <span>Akun penyimpanan</span>
                         </NuxtLink>

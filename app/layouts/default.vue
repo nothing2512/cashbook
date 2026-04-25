@@ -9,17 +9,19 @@ useHead({
     { rel: "stylesheet", href: "mazer/assets/compiled/css/app.css" },
     { rel: "stylesheet", href: "mazer/assets/compiled/css/app-dark.css" },
     { rel: "stylesheet", href: "mazer/assets/compiled/css/iconly.css" },
+    { rel: "stylesheet", href: "mazer/assets/extensions/toastify-js/src/toastify.css" }
   ],
   htmlAttrs: {
     lang: 'en'
   },
   script: [
-    { defer: true, src: "mazer/assets/static/js/components/dark.js" },
-    { defer: true, src: "mazer/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js" },
-    { defer: true, src: "mazer/assets/compiled/js/app.js" },
-    { defer: true, src: "mazer/assets/extensions/apexcharts/apexcharts.min.js" },
-    { defer: true, src: "mazer/assets/static/js/pages/dashboard.js" },
+    { src: "mazer/assets/static/js/components/dark.js" },
+    { src: "mazer/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js" },
+    { src: "mazer/assets/compiled/js/app.js" },
+    { src: "mazer/assets/extensions/apexcharts/apexcharts.min.js" },
+    { src: "mazer/assets/static/js/pages/dashboard.js" },
     { src: "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" },
+    { src: "mazer/assets/extensions/toastify-js/src/toastify.js" }
   ]
 })
 
@@ -53,19 +55,21 @@ if (token.value == null) {
 
 const pageTitle = ref('Dashboard')
 const loading = ref(false)
+const tab = ref("dashboard")
 
 const setLoading = (status) => {
     loading.value = status
 }
 
-provide('setLoading', setLoading)
-
-const setPageTitle = (value) => {
-    if (value == 'dashboard') pageTitle.value = "Dashboard";
-    if (value == 'incomes') pageTitle.value = "Pemasukan";
-    if (value == 'expenses') pageTitle.value = "Pengeluaran";
-    if (value == 'debts') pageTitle.value = "Hutang";
-    if (value == 'receivables') pageTitle.value = "Piutang";
+const setTab = (value) => {
+  tab.value = value
+  if (value == "dashboard") pageTitle.value = "Dashboard"
+  if (value == "accounts") pageTitle.value = "Akun Penyimpanan"
+  if (value == "categories") pageTitle.value = "Kategori"
+  if (value == "debts") pageTitle.value = "Hutang"
+  if (value == "expenses") pageTitle.value = "Pengeluaran"
+  if (value == "incomes") pageTitle.value = "Pemasukan"
+  if (value == "receivables") pageTitle.value = "Piutang"
 }
 
 </script>
@@ -73,7 +77,7 @@ const setPageTitle = (value) => {
 <template>
     <div id="app">
         <Loading :loading="loading" />
-        <Sidebar @change="setPageTitle" />
+        <Sidebar :tab="tab" />
         <div id="main">
             <header class="mb-3">
                 <a href="#" class="burger-btn d-block d-xl-none">
@@ -85,7 +89,7 @@ const setPageTitle = (value) => {
                 <h3>{{ pageTitle }}</h3>
             </div>
             <div class="page-content">
-                <NuxtPage />
+                <NuxtPage :setLoading="setLoading" :setTab="setTab" />
             </div>
 
             <Footer />
