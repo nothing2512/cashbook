@@ -2,7 +2,7 @@ const crud = (base: string) => {
     const { fetchSupabaseList, fetchSupabase } = useApi()
 
     const all = async (page: number, pageSize:number=10) => {
-        return await fetchSupabaseList("GET", `/${base}`, page, pageSize)
+        return await fetchSupabaseList("GET", `/${base}?order=id.asc`, page, pageSize)
     }
 
     const add = async (data: any) => {
@@ -22,6 +22,8 @@ const crud = (base: string) => {
 
 export const useCrud = () => {
     return {
-        fetchCategory: crud("categories")
+        fetchCategory: crud("categories"),
+        fetchAccount: crud("savings"),
+        fetchTransaction: crud("transactions")
     }
 }

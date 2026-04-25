@@ -9,13 +9,15 @@ var props = defineProps({
 
 let form = reactive({
     id: props.data?.id || 0,
-    name: props.data?.name || ''
+    name: props.data?.name || '',
+    num: props.data?.num || '',
+    amount: props.data?.amount || 0
 })
 
 let modal = null
 
 onMounted(() => {
-    const el = document.getElementById("categoryModal")
+    const el = document.getElementById("savingModal")
     modal = new bootstrap.Modal(el)
     el.addEventListener('hidden.bs.modal', () => {
         props.onCloseModal()
@@ -26,7 +28,9 @@ watch(() => props.show, (newVal, oldVal) => {
     if (newVal) {
         form = reactive({
             id: props.data?.id || 0,
-            name: props.data?.name || ''
+            name: props.data?.name || '',
+            num: props.data?.num || '',
+            amount: props.data?.amount || 0
         })
         modal.show()
     }
@@ -44,7 +48,8 @@ const toast = (message) => {
 }
 
 const onSubmit = () => {
-    if (form.name == '') return toast("nama kategori wajib diisi")
+    if (form.name === '') return toast("nama kategori wajib diisi")
+    if (form.amount === '') return toast("nominal wajib diisi")
     modal.hide()
     props.onSubmit(form)
 }
@@ -53,12 +58,12 @@ const onSubmit = () => {
 
 <template>
     <Teleport to="body">
-        <div class="modal fade text-left" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33"
+        <div class="modal fade text-left" id="savingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title" id="myModalLabel33">Kelola Kategori</h4>
+                        <h4 class="modal-title" id="myModalLabel33">Kelola Akun Penyimpanan</h4>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <i data-feather="x"></i>
                         </button>
@@ -66,9 +71,19 @@ const onSubmit = () => {
                     <form @submit.prevent="onSubmit">
                         <div class="modal-body">
                             <div class="form-group mandatory">
-                                <label class="form-label" for="name">Nama kategori </label>
-                                <input id="name" required="true" type="text" placeholder="Nama kategori"
+                                <label class="form-label" for="name">Akun </label>
+                                <input id="name" required="true" type="text" placeholder="Nama penyimpanan (e.g. BCA, OVO, dll.)"
                                     class="form-control" v-model="form.name">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="num">Nomor Akun </label>
+                                <input id="num" required="false" type="text" placeholder="Nomor Akun"
+                                    class="form-control" v-model="form.num">
+                            </div>
+                            <div class="form-group mandatory">
+                                <label class="form-label" for="amount">Nominal </label>
+                                <input id="amount" required="true" type="number" placeholder="Nominal Simpanan"
+                                    class="form-control" v-model="form.amount">
                             </div>
                         </div>
                         <div class="modal-footer">

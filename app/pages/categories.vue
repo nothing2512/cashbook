@@ -91,8 +91,8 @@ const updateData = async (data) => {
 
 const removeData = async (data) => {
     const result = await Swal.fire({
-        title: "Konfirmasi",
-        text: `Hapus kategori "${data.name}"`,
+        title: `Hapus kategori "${data.name}" ?`,
+        text: "Semua data transaksi pada kategori ini akan dihapus !!!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: 'Ya, hapus!',
@@ -131,8 +131,8 @@ const removeData = async (data) => {
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Name</th>
-                                            <th>Action</th>
+                                            <th>Nama</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
