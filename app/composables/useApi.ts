@@ -3,7 +3,7 @@ export const useApi = () => {
   const config = useRuntimeConfig()
 
   const fetchSupabase = async (method: any, endpoint: string, body?: any) => {
-    if (method == "PATCH") delete(body.id)
+    if (body) delete(body.id)
     const token = useCookie('token')
     if (!token.value) {
       return navigateTo('/login')
