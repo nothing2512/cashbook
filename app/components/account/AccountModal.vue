@@ -48,7 +48,7 @@ const toast = (message) => {
 }
 
 const onSubmit = () => {
-    if (form.name === '') return toast("nama kategori wajib diisi")
+    if (form.name === '') return toast("akun wajib diisi")
     if (form.amount === '') return toast("nominal wajib diisi")
     modal.hide()
     props.onSubmit(form)

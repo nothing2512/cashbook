@@ -55,9 +55,6 @@ const setPage = async (newPage) => {
 
 const setModal = (state, data) => {
     modalState = state
-    if (state == 'update') {
-        
-    }
     modalData.value = data
     showModal.value = true
 }
@@ -92,6 +89,7 @@ const updateData = async (data) => {
 }
 
 const removeData = async (data) => {
+
     const result = await Swal.fire({
         title: `Hapus akun penyimpanan "${data.name}" ?`,
         text: "Semua data transaksi pada akun penyimpanan ini akan dihapus !!!",
@@ -117,7 +115,8 @@ const removeData = async (data) => {
 <template>
     <section class="section">
         <div class="row" id="basic-table">
-            <AccountModal :show="showModal" :on-close-modal="onCloseModal" :on-submit="onModalSubmit" :data="modalData" />
+            <AccountModal :show="showModal" :on-close-modal="onCloseModal" :on-submit="onModalSubmit"
+                :data="modalData" />
             <div class="col-12 col-md-12">
                 <div class="card">
                     <div class="card-content">
@@ -151,7 +150,7 @@ const removeData = async (data) => {
                                                         @click="setModal('update', account)">
                                                         <i class="bi bi-pencil"></i>
                                                     </button>
-                                                    <button href="#" class="btn icon btn-danger"
+                                                    <button href="#" class="btn icon btn-danger" v-if="account.id != 1"
                                                         @click="removeData(account)">
                                                         <i class="bi bi-x"></i>
                                                     </button>

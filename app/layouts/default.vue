@@ -9,7 +9,8 @@ useHead({
     { rel: "stylesheet", href: "mazer/assets/compiled/css/app.css" },
     { rel: "stylesheet", href: "mazer/assets/compiled/css/app-dark.css" },
     { rel: "stylesheet", href: "mazer/assets/compiled/css/iconly.css" },
-    { rel: "stylesheet", href: "mazer/assets/extensions/toastify-js/src/toastify.css" }
+    { rel: "stylesheet", href: "mazer/assets/extensions/toastify-js/src/toastify.css" },
+    { rel: "stylesheet", href: "mazer/assets/extensions/flatpickr/flatpickr.min.css" }
   ],
   htmlAttrs: {
     lang: 'en'
@@ -21,7 +22,8 @@ useHead({
     { src: "mazer/assets/extensions/apexcharts/apexcharts.min.js" },
     { src: "mazer/assets/static/js/pages/dashboard.js" },
     { src: "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" },
-    { src: "mazer/assets/extensions/toastify-js/src/toastify.js" }
+    { src: "mazer/assets/extensions/toastify-js/src/toastify.js" },
+    { src: "mazer/assets/extensions/flatpickr/flatpickr.min.js" }
   ]
 })
 

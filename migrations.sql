@@ -29,7 +29,7 @@ CREATE TABLE transactions (
     amount NUMERIC(15, 2) NOT NULL,
     kind transactions_kind_enum NOT NULL,
     status transactions_status_enum NOT NULL DEFAULT ('paid'),
-    transaction_date TIMESTAMP NOT NULL,
+    transaction_date TIMESTAMP NOT NULL DEFAULT NOW(),
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
     
@@ -62,7 +62,7 @@ INSERT INTO categories (name) VALUES ('default');
 
 -- views
 CREATE OR REPLACE VIEW transaction_views AS
-SELECT t.*, COALESCE(SUM(t.amount), 0) AS child_amount
+SELECT t.*, COALESCE(SUM(t2.amount), 0) AS child_amount, t.amount <= COALESCE(SUM(t2.amount), 0) AS paid_off
 FROM transactions t
 LEFT JOIN transactions t2 ON t2.parent_id = t.id
 GROUP BY t.id;
@@ -77,7 +77,6 @@ SELECT
     kind,
     SUM(amount) AS total_amount
 FROM transactions
-WHERE parent_id IS NOT NULL
 GROUP BY 
     EXTRACT(YEAR FROM transaction_date),
     EXTRACT(MONTH FROM transaction_date),
@@ -94,7 +93,6 @@ SELECT
     kind,
     SUM(amount) AS total_amount
 FROM transactions
-WHERE parent_id IS NOT NULL
 GROUP BY 
     EXTRACT(DAY FROM transaction_date),
     EXTRACT(YEAR FROM transaction_date),
