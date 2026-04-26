@@ -1,64 +1,56 @@
-# Nuxt Starter Template
+# Cashbook apps
 
-[![Nuxt UI](https://img.shields.io/badge/Made%20with-Nuxt%20UI-00DC82?logo=nuxt&labelColor=020420)](https://ui.nuxt.com)
+## Features
+- Dashboard
+- Transaction management (including income, expenses, debt, receivables)
+- category manegement
+- saving account management
 
-Use this template to get started with [Nuxt UI](https://ui.nuxt.com) quickly.
+## How to deploy it for free
 
-- [Live demo](https://starter-template.nuxt.dev/)
-- [Documentation](https://ui.nuxt.com/docs/getting-started/installation/nuxt)
+#### Servers : 
+- [Vercel](http://vercel.com/)
+- [Supabase](https://supabase.com/)
 
-<a href="https://starter-template.nuxt.dev/" target="_blank">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png">
-    <img alt="Nuxt Starter Template" src="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png" width="830" height="466">
-  </picture>
-</a>
+#### Steps 1 (Github) :
+- Fork/clone this repository into your github account
+- 
 
-> The starter template for Vue is on https://github.com/nuxt-ui-templates/starter-vue.
+#### Steps 2 (Supabase) :
+- Create supabase account.
+- Create supabase authentication users. [see instruction here](https://chatgpt.com/share/69ee0a13-1f64-83a1-baa6-91deca2f455d)
+- migrate database in supabase from `migrations.sql` file. [see instruction here](https://chatgpt.com/share/69ee0b26-85bc-83a1-bb64-13fd53652bc9)
+- 
 
-## Quick Start
+#### Steps 3 (vercel) :
+- Create vercel account.
+- Find your supabase api keys in Supabase dashboard > Project Settings > API Keys -> Publishable Key (note: this key will be used as env `SUPABASE_API_KEY`)
+- Find your supabase url in Supabase dashboard > Project Overview > Copy > Copy Project URL (note: this url will be used as env `SUPABASE_URL` with format `<your-supabase-project-url>/rest/v1`)
+- Deploy your apps into vercel account. [see instruction here](https://chatgpt.com/share/69ee0e69-fd4c-8322-ac8d-7e0c01b204f4)
 
-```bash [Terminal]
-npm create nuxt@latest -- -t ui
+
+## LICENSE
 ```
+MIT License
 
-## Deploy your own
+Copyright (c) 2026 Samtebor
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-name=starter&repository-url=https%3A%2F%2Fgithub.com%2Fnuxt-ui-templates%2Fstarter&demo-image=https%3A%2F%2Fui.nuxt.com%2Fassets%2Ftemplates%2Fnuxt%2Fstarter-dark.png&demo-url=https%3A%2F%2Fstarter-template.nuxt.dev%2F&demo-title=Nuxt%20Starter%20Template&demo-description=A%20minimal%20template%20to%20get%20started%20with%20Nuxt%20UI.)
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-## Setup
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-Make sure to install the dependencies:
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
-```bash
-pnpm install
 ```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-pnpm dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-pnpm build
-```
-
-Locally preview production build:
-
-```bash
-pnpm preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
-
-## Renovate integration
-
-Install [Renovate GitHub app](https://github.com/apps/renovate/installations/select_target) on your repository and you are good to go.
