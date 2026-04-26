@@ -50,7 +50,6 @@ const token = useCookie('token')
 if (!token.value) {
   console.log(token)
   console.log(token.value)
-  alert("No Token")
 }
 
 </script>
