@@ -48,12 +48,14 @@ onMounted(async () => {
         expensesList.value = response.data
 
         response = await fetchDashboard.fetchMonthlyIncomeDebt()
-        debt.value = response.now
         debtList.value = response.data
 
         response = await fetchDashboard.fetchMonthlyExpenesDebt()
-        receivables.value = response.now
         receivablesList.value = response.data
+
+        response = await fetchDashboard.fetchUpiadDebts()
+        debt.value = response.debt
+        receivables.value = response.receivables
 
         response = await fetchAccount.all(1, 200)
         for (const data of response.data) {
@@ -79,9 +81,9 @@ onMounted(async () => {
                     :icon="'iconly-boldActivity'" />
                 <CardStat title="Pengeluaran bulan ini" :value="rupiah(expenses)" :color="'blue'"
                     :icon="'iconly-boldBuy'" />
-                <CardStat title="Total hutang tersisa" :value="rupiah(debt)" :color="'black'"
+                <CardStat title="Hutang bulan ini" :value="rupiah(debt)" :color="'black'"
                     :icon="'iconly-boldPaper'" />
-                <CardStat title="Total Piutang tersisa" :value="rupiah(receivables)" :color="'red'"
+                <CardStat title="Piutang bulan ini" :value="rupiah(receivables)" :color="'red'"
                     :icon="'iconly-boldFolder'" />
             </div>
         </div>

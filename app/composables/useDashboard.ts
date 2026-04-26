@@ -40,5 +40,16 @@ export const useDashboard = () => {
 
     const fetchMonthlyExpenesDebt = async () => await fetchMonthlyList("monthly_debt", "expenses")
 
-    return { fetchDashboard: { fetchMonthlyIncome, fetchMonthlyExpenes, fetchMonthlyIncomeDebt, fetchMonthlyExpenesDebt } }
+    const fetchUpiadDebts = async () => {
+        const response: any = await fetchSupabaseList("GET", "/debt_views", 1, 2)
+        let debt = 0
+        let receivables = 0
+        for (const item of response.data) {
+            if (item.kind == 'income') debt += item.unpaid
+            if (item.kind == 'expenses') receivables += item.unpaid
+        }
+        return {debt, receivables}
+    }
+
+    return { fetchDashboard: { fetchMonthlyIncome, fetchMonthlyExpenes, fetchMonthlyIncomeDebt, fetchMonthlyExpenesDebt, fetchUpiadDebts } }
 }

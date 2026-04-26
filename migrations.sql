@@ -259,3 +259,16 @@ GROUP BY
 
 ALTER VIEW monthly_debt SET (security_invoker = true);
 GRANT SELECT ON monthly_debt TO authenticated;
+
+CREATE OR REPLACE VIEW debt_views AS
+SELECT 
+    t.kind,
+    SUM(t.amount) - COALESCE(SUM(t2.amount), 0) AS unpaid
+FROM transactions t
+LEFT JOIN transactions t2 ON t2.parent_id = t.id
+WHERE t.is_debt = true
+GROUP BY 
+    t.kind;
+
+ALTER VIEW debt_views SET (security_invoker = true);
+GRANT SELECT ON debt_views TO authenticated;
