@@ -81,9 +81,9 @@ onMounted(async () => {
                     :icon="'iconly-boldActivity'" />
                 <CardStat title="Pengeluaran bulan ini" :value="rupiah(expenses)" :color="'blue'"
                     :icon="'iconly-boldBuy'" />
-                <CardStat title="Hutang bulan ini" :value="rupiah(debt)" :color="'black'"
+                <CardStat title="Total hutang tersisa" :value="rupiah(debt)" :color="'black'"
                     :icon="'iconly-boldPaper'" />
-                <CardStat title="Piutang bulan ini" :value="rupiah(receivables)" :color="'red'"
+                <CardStat title="Total piutang tersisa" :value="rupiah(receivables)" :color="'red'"
                     :icon="'iconly-boldFolder'" />
             </div>
         </div>
