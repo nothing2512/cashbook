@@ -48,8 +48,7 @@ onMounted(async () => {
 
 const token = useCookie('token')
 if (!token.value) {
-  console.log(token)
-  console.log(token.value)
+  navigateTo("/login")
 }
 
 </script>
@@ -73,17 +72,28 @@ const setTab = (value) => {
   if (value == "expenses") pageTitle.value = "Pengeluaran"
   if (value == "incomes") pageTitle.value = "Pemasukan"
   if (value == "receivables") pageTitle.value = "Piutang"
+  closeSidebar()
+}
+
+const isSidebar = ref(false)
+const closeSidebar = () => {
+  isSidebar.value = false
+}
+
+const openSidebar = () => {
+  isSidebar.value = true
 }
 
 </script>
 
 <template>
+    <div class="sidebar-backdrop" v-if="isSidebar" @click="closeSidebar"></div>
     <div id="app">
         <Loading :loading="loading" />
-        <Sidebar :tab="tab" />
+        <Sidebar :tab="tab" :active="isSidebar" />
         <div id="main">
             <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none">
+                <a href="#" class="burger-btn d-block d-xl-none" @click.prevent="openSidebar">
                     <i class="bi bi-justify fs-3"></i>
                 </a>
             </header>
