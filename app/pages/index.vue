@@ -14,6 +14,7 @@ const incomeList = ref()
 const expensesList = ref()
 const debtList = ref()
 const receivablesList = ref()
+const totalMoney = ref(0)
 
 const props = defineProps({
     setTab: Function,
@@ -23,6 +24,7 @@ const props = defineProps({
 props.setTab("dashboard")
 
 const { fetchDashboard } = useDashboard()
+const { fetchAccount } = useCrud()
 
 const showErr = (e) => {
     props.setLoading(false)
@@ -52,7 +54,12 @@ onMounted(async () => {
         response = await fetchDashboard.fetchMonthlyExpenesDebt()
         receivables.value = response.now
         receivablesList.value = response.data
-        
+
+        response = await fetchAccount.all(1, 200)
+        for (const data of response.data) {
+            totalMoney.value += data.amount
+        }
+
         loaded.value = true
         props.setLoading(false)
     } catch (e) {
@@ -64,20 +71,31 @@ onMounted(async () => {
 
 <template>
     <section class="row">
+        <div class="col-12">
+            <div class="row">
+                <CardStat title="Total uang saat ini" :value="rupiah(totalMoney)" :color="'green'"
+                    :icon="'iconly-boldBag-2'" />
+                <CardStat title="Pemasukan bulan ini" :value="rupiah(income)" :color="'purple'"
+                    :icon="'iconly-boldActivity'" />
+                <CardStat title="Pengeluaran bulan ini" :value="rupiah(expenses)" :color="'blue'"
+                    :icon="'iconly-boldBuy'" />
+                <CardStat title="Total hutang tersisa" :value="rupiah(debt)" :color="'black'"
+                    :icon="'iconly-boldPaper'" />
+                <CardStat title="Total Piutang tersisa" :value="rupiah(receivables)" :color="'red'"
+                    :icon="'iconly-boldFolder'" />
+            </div>
+        </div>
         <div class="col-12 col-lg-9">
             <div class="row">
-                <CardStat title="Pemasukan bulan ini" :value="rupiah(income)" :color="'purple'" :icon="''" />
-                <CardStat title="Pengeluaran bulan ini" :value="rupiah(expenses)" :color="'blue'" :icon="''" />
-                <CardStat title="Total hutang tersisa" :value="rupiah(debt)" :color="'green'" :icon="''" />
-                <CardStat title="Total Piutang tersisa" :value="rupiah(receivables)" :color="'red'" :icon="''" />
-            </div>
-            <div class="row">
-                <MonthlyReportChart id="main-financial" title="Grafik laporan keuangan" :loaded="loaded" :incomes="incomeList" :expenses="expensesList" />
-                <MonthlyReportChart id="debt-financial" title="Grafik laporan hutang" :loaded="loaded" :incomes="debtList" :expenses="receivablesList" income-text="Hutang" expenses-text="Piutang"/>
+                <MonthlyReportChart id="main-financial" title="Grafik laporan keuangan" :loaded="loaded"
+                    :incomes="incomeList" :expenses="expensesList" />
+                <MonthlyReportChart id="debt-financial" title="Grafik laporan hutang" :loaded="loaded"
+                    :incomes="debtList" :expenses="receivablesList" income-text="Hutang" expenses-text="Piutang" />
             </div>
         </div>
         <div class="col-12 col-lg-3">
-            <FinancialHealthChart :income="income" :expenses="expenses" :debt="debt" :receivables="receivables" :loaded="loaded" />
+            <FinancialHealthChart :income="income" :expenses="expenses" :debt="debt" :receivables="receivables"
+                :loaded="loaded" />
             <CurrentMonthFinanceChart :income="income" :expenses="expenses" :loaded="loaded" />
         </div>
     </section>

@@ -10,7 +10,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="col-6 col-lg-3 col-md-6">
+    <div class="col">
         <div class="card">
             <div class="card-body px-4 py-4-5">
                 <div class="row">

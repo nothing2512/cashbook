@@ -80,12 +80,14 @@ watch(() => props.loaded, (newVal, oldVal) => {
 </script>
 
 <template>
-    <div class="card">
-        <div class="card-header">
-            <h4>{{ props.title }}</h4>
-        </div>
-        <div class="card-body">
-            <div :id="props.id"></div>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>{{ props.title }}</h4>
+            </div>
+            <div class="card-body">
+                <div :id="props.id"></div>
+            </div>
         </div>
     </div>
 </template>

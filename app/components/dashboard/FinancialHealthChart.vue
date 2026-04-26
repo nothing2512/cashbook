@@ -98,12 +98,14 @@ watch(() => props.loaded, (newVal, oldVal) => {
 </script>
 
 <template>
-    <div class="card">
-        <div class="card-header">
-            <h4>Kesehatan Finansial</h4>
-        </div>
-        <div class="card-body">
-            <div id="finance-health"></div>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Kesehatan Finansial</h4>
+            </div>
+            <div class="card-body">
+                <div id="finance-health"></div>
+            </div>
         </div>
     </div>
 </template>

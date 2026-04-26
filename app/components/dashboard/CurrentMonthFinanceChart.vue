@@ -1,7 +1,7 @@
 <script setup>
 const props = defineProps({
     income: Number,
-    expenses: Number, 
+    expenses: Number,
     loaded: Boolean,
 })
 
@@ -36,12 +36,14 @@ watch(() => props.loaded, (newVal, oldVal) => {
 </script>
 
 <template>
-    <div class="card">
-        <div class="card-header">
-            <h4>Keuangan bulan ini</h4>
-        </div>
-        <div class="card-body">
-            <div id="current-month-finance"></div>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Keuangan bulan ini</h4>
+            </div>
+            <div class="card-body">
+                <div id="current-month-finance"></div>
+            </div>
         </div>
     </div>
 </template>
