@@ -1,0 +1,47 @@
+<script setup>
+const props = defineProps({
+    income: Number,
+    expenses: Number, 
+    loaded: Boolean,
+})
+
+watch(() => props.loaded, (newVal, oldVal) => {
+    if (!props.loaded) return;
+    const chartVisitorsProfile = new ApexCharts(
+        document.getElementById("current-month-finance"),
+        {
+            series: [props.income, props.expenses],
+            labels: ["Pemasukan", "Pengeluaran"],
+            colors: ["#435ebe", "#55c6e8"],
+            chart: {
+                type: "donut",
+                width: "100%",
+                height: "350px",
+            },
+            legend: {
+                position: "bottom",
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return rupiah(val)
+                    }
+                }
+            },
+        }
+    )
+    chartVisitorsProfile.render()
+})
+
+</script>
+
+<template>
+    <div class="card">
+        <div class="card-header">
+            <h4>Keuangan bulan ini</h4>
+        </div>
+        <div class="card-body">
+            <div id="current-month-finance"></div>
+        </div>
+    </div>
+</template>

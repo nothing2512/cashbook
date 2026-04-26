@@ -1,4 +1,19 @@
 <script setup>
+import Swal from 'sweetalert2';
+import CardStat from '~/components/dashboard/CardStat.vue';
+import CurrentMonthFinanceChart from '~/components/dashboard/CurrentMonthFinanceChart.vue';
+import FinancialHealthChart from '~/components/dashboard/FinancialHealthChart.vue';
+import MonthlyReportChart from '~/components/dashboard/MonthlyReportChart.vue';
+
+const income = ref(0)
+const expenses = ref(0)
+const debt = ref(0)
+const receivables = ref(0)
+const loaded = ref(false)
+const incomeList = ref()
+const expensesList = ref()
+const debtList = ref()
+const receivablesList = ref()
 
 const props = defineProps({
     setTab: Function,
@@ -7,10 +22,63 @@ const props = defineProps({
 
 props.setTab("dashboard")
 
+const { fetchDashboard } = useDashboard()
+
+const showErr = (e) => {
+    props.setLoading(false)
+    Swal.fire({
+        title: "Gagal!",
+        text: e.msg,
+        icon: "warning",
+        confirmButtonText: "OK"
+    })
+}
+
+onMounted(async () => {
+    props.setLoading(true)
+    try {
+        let response = await fetchDashboard.fetchMonthlyIncome()
+        income.value = response.now
+        incomeList.value = response.data
+
+        response = await fetchDashboard.fetchMonthlyExpenes()
+        expenses.value = response.now
+        expensesList.value = response.data
+
+        response = await fetchDashboard.fetchMonthlyIncomeDebt()
+        debt.value = response.now
+        debtList.value = response.data
+
+        response = await fetchDashboard.fetchMonthlyExpenesDebt()
+        receivables.value = response.now
+        receivablesList.value = response.data
+        
+        loaded.value = true
+        props.setLoading(false)
+    } catch (e) {
+        showErr(e)
+    }
+})
+
 </script>
 
 <template>
-  <div>
-    <p>Halo</p>
-  </div>
+    <section class="row">
+        <div class="col-12 col-lg-9">
+            <div class="row">
+                <CardStat title="Pemasukan bulan ini" :value="rupiah(income)" :color="'purple'" :icon="''" />
+                <CardStat title="Pengeluaran bulan ini" :value="rupiah(expenses)" :color="'blue'" :icon="''" />
+                <CardStat title="Total hutang tersisa" :value="rupiah(debt)" :color="'green'" :icon="''" />
+                <CardStat title="Total Piutang tersisa" :value="rupiah(receivables)" :color="'red'" :icon="''" />
+            </div>
+            <div class="row">
+                <MonthlyReportChart id="main-financial" title="Grafik laporan keuangan" :loaded="loaded" :incomes="incomeList" :expenses="expensesList" />
+                <MonthlyReportChart id="debt-financial" title="Grafik laporan hutang" :loaded="loaded" :incomes="debtList" :expenses="receivablesList" income-text="Hutang" expenses-text="Piutang"/>
+            </div>
+        </div>
+        <div class="col-12 col-lg-3">
+            <FinancialHealthChart :income="income" :expenses="expenses" :debt="debt" :receivables="receivables" :loaded="loaded" />
+            <CurrentMonthFinanceChart :income="income" :expenses="expenses" :loaded="loaded" />
+        </div>
+    </section>
 </template>

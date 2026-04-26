@@ -1,21 +1,13 @@
 export const useTransaction = () => {
     const { fetchSupabase, fetchSupabaseList } = useApi()
 
-    const incomes = async (page: number, pageSize:number=10) => {
-        return await fetchSupabaseList("GET", `/transactions?select=*,savings(name),categories(name)&order=transaction_date.desc&kind=eq.income&status=eq.paid&is_debt=eq.false&parent_id=is.null`, page, pageSize)
-    }
+    const incomes = async (page: number, pageSize:number=10) => fetchSupabaseList("GET", `/transactions?select=*,savings(name),categories(name)&order=transaction_date.desc&kind=eq.income&status=eq.paid&is_debt=eq.false&parent_id=is.null`, page, pageSize)
 
-    const expenses = async (page: number, pageSize:number=10) => {
-        return await fetchSupabaseList("GET", `/transactions?select=*,savings(name),categories(name)&order=transaction_date.desc&kind=eq.expenses&status=eq.paid&is_debt=eq.false&parent_id=is.null`, page, pageSize)
-    }
+    const expenses = async (page: number, pageSize:number=10) => fetchSupabaseList("GET", `/transactions?select=*,savings(name),categories(name)&order=transaction_date.desc&kind=eq.expenses&status=eq.paid&is_debt=eq.false&parent_id=is.null`, page, pageSize)
 
-    const settlements = async (id: number, page: number, pageSize:number=10) => {
-        return await fetchSupabaseList("GET", `/transactions?select=*,savings(name),categories(name)&order=transaction_date.desc&parent_id=eq.${id}`, page, pageSize)
-    }
+    const settlements = async (id: number, page: number, pageSize:number=10) => fetchSupabaseList("GET", `/transactions?select=*,savings(name),categories(name)&order=transaction_date.desc&parent_id=eq.${id}`, page, pageSize)
 
-    const detail = async (id: number) => {
-        return await fetchSupabaseList("GET", `/transactions?id=eq.${id}`, 1, 1)
-    }
+    const detail = async (id: number) => fetchSupabaseList("GET", `/transactions?id=eq.${id}`, 1, 1)
 
     const debts = async (page: number, paidOff: string, pageSize:number=10) => {
         let query = ""
@@ -46,17 +38,11 @@ export const useTransaction = () => {
         }
     }
 
-    const add = async (data: any) => {
-        return await fetchSupabase("POST", `/transactions`, body(data))
-    }
+    const add = async (data: any) => fetchSupabase("POST", `/transactions`, body(data))
 
-    const edit = async (data: any) => {
-        return await fetchSupabase("PATCH", `/transactions?id=eq.${data.id}`, body(data))
-    }
+    const edit = async (data: any) => fetchSupabase("PATCH", `/transactions?id=eq.${data.id}`, body(data))
 
-    const remove = async (id: any) => {
-        return await fetchSupabase("DELETE", `/transactions?id=eq.${id}`)
-    }
+    const remove = async (id: any) => fetchSupabase("DELETE", `/transactions?id=eq.${id}`)
 
     return { fetchTransaction: { add, edit, remove, incomes, expenses, debts, receivables, settlements, detail } }
 }

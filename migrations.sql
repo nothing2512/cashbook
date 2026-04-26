@@ -74,6 +74,7 @@ CREATE OR REPLACE VIEW monthly_report AS
 SELECT 
     EXTRACT(MONTH FROM transaction_date) AS month,
     EXTRACT(YEAR FROM transaction_date) AS year,
+    (EXTRACT(YEAR FROM transaction_date) * 100) + EXTRACT(MONTH FROM transaction_date) as key,
     kind,
     SUM(amount) AS total_amount
 FROM transactions
@@ -90,6 +91,7 @@ SELECT
     EXTRACT(DAY FROM transaction_date) AS day,
     EXTRACT(MONTH FROM transaction_date) AS month,
     EXTRACT(YEAR FROM transaction_date) AS year,
+    (EXTRACT(YEAR FROM transaction_date) * 10000) + (EXTRACT(MONTH FROM transaction_date) * 100) + EXTRACT(DAY FROM transaction_date) as key,
     kind,
     SUM(amount) AS total_amount
 FROM transactions
@@ -240,3 +242,20 @@ CREATE OR REPLACE TRIGGER trg_transactions_after_delete
 AFTER DELETE ON transactions
 FOR EACH ROW
 EXECUTE FUNCTION trg_transactions_after_delete_fn();
+
+CREATE OR REPLACE VIEW monthly_debt AS
+SELECT 
+    EXTRACT(MONTH FROM transaction_date) AS month,
+    EXTRACT(YEAR FROM transaction_date) AS year,
+    (EXTRACT(YEAR FROM transaction_date) * 100) + EXTRACT(MONTH FROM transaction_date) as key,
+    kind,
+    SUM(amount) AS total_amount
+FROM transactions
+WHERE is_debt=true
+GROUP BY 
+    EXTRACT(YEAR FROM transaction_date),
+    EXTRACT(MONTH FROM transaction_date),
+    kind;
+
+ALTER VIEW monthly_debt SET (security_invoker = true);
+GRANT SELECT ON monthly_debt TO authenticated;
