@@ -48,6 +48,7 @@ onMounted(async () => {
 
 const token = useCookie('token')
 if (!token.value) {
+  console.log(token)
   navigateTo("/login")
 }
 
