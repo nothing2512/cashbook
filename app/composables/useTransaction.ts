@@ -42,7 +42,14 @@ export const useTransaction = () => {
 
     const edit = async (data: any) => fetchSupabase("PATCH", `/transactions?id=eq.${data.id}`, body(data))
 
-    const remove = async (id: any) => fetchSupabase("DELETE", `/transactions?id=eq.${id}`)
+    const remove = async (id: any) => {
+        try {
+            await fetchSupabase("DELETE", `/transactions?parent_id=eq.${id}`)
+            await fetchSupabase("DELETE", `/transactions?id=eq.${id}`)
+        } catch (e) {
+            throw e
+        }
+    }
 
     return { fetchTransaction: { add, edit, remove, incomes, expenses, debts, receivables, settlements, detail } }
 }
