@@ -183,16 +183,20 @@ const removeData = async (data) => {
                                             <td>{{ idx + 1 }}</td>
                                             <td>{{ transaction.title }}</td>
                                             <td>{{ rupiah(transaction.amount) }}</td>
-                                            <td><span class="badge" :class="transaction.paid_off ? 'bg-success' : 'bg-danger'" >{{ transaction.paid_off ? 'Lunas' : 'Belum Lunas' }}</span></td>
+                                            <td>
+                                                <span class="badge" :class="transaction.paid_off ? 'bg-success' : 'bg-danger'" >{{ transaction.paid_off ? 'Lunas' : 'Belum Lunas' }}</span>
+                                                <br>
+                                                <span class="badge bg-info" v-if="!transaction.paid_off">- {{ rupiah(transaction.amount - transaction.child_amount) }}</span>
+                                            </td>
                                             <td><span class="badge bg-primary">{{ transaction.categories.name }}</span>
                                             </td>
                                             <td><span class="badge bg-info">{{ transaction.savings.name }}</span></td>
                                             <td>{{ transaction.transaction_date }}</td>
                                             <td>
                                                 <div class="buttons">
-                                                    <button href="#" class="btn icon btn-primary">
+                                                    <NuxtLink :href="`/settlement/receivables/${transaction.id}`" class="btn icon btn-primary">
                                                         <span>Pelunasan</span>
-                                                    </button>
+                                                    </NuxtLink>
                                                     <button href="#" class="btn icon btn-primary"
                                                         @click="setModal('update', transaction)">
                                                         <i class="bi bi-pencil"></i>

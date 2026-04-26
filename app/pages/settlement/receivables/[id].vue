@@ -14,17 +14,20 @@ const props = defineProps({
     setTab: Function
 })
 
-props.setTab("debts")
+const route = useRoute()
 
+props.setTab("receivables")
+
+const transactionId = route.params.id
 const accounts = ref()
 const categories = ref()
 const transactions = ref()
+const transaction = ref()
 const page = ref(1)
 const totalData = ref(0)
 const totalPage = ref(1)
 const showModal = ref(false)
 const modalData = ref()
-const listState = ref('all')
 
 let modalState = 'add'
 
@@ -47,6 +50,9 @@ const getFullData = async () => {
         response = await fetchCategory.all(page.value, 200)
         categories.value = response.data
 
+        response = await fetchTransaction.detail(transactionId)
+        transaction.value = response.data[0]
+
         await getData()
 
         props.setLoading(false)
@@ -55,11 +61,10 @@ const getFullData = async () => {
     }
 }
 
-const getData = async (state="all") => {
-    listState.value = state
+const getData = async () => {
     props.setLoading(true)
     try {
-        const response = await fetchTransaction.debts(page.value, listState.value)
+        const response = await fetchTransaction.settlements(transactionId, page.value)
         transactions.value = response.data
         totalData.value = response.totalData
         totalPage.value = response.totalPage
@@ -93,8 +98,8 @@ const onModalSubmit = async (data) => {
 
 const setDefault = (data) => {
     data.kind = "income"
-    data.status = "unpaid"
-    data.is_debt = true
+    data.status = "paid"
+    data.parent_id = transactionId
     return data
 }
 
@@ -144,22 +149,14 @@ const removeData = async (data) => {
 <template>
     <section class="section">
         <div class="row" id="basic-table">
-            <TransactionModal :show="showModal" :on-close-modal="onCloseModal" :on-submit="onModalSubmit"
-                :data="modalData" :categories="categories" :savings="accounts" />
+            <TransactionModal :show="showModal" :on-close-modal="onCloseModal" :on-submit="onModalSubmit" :data="modalData" :categories="categories" :savings="accounts" />
             <div class="col-12 col-md-12">
+                <NuxtLink href="/receivables" class="btn btn-light mb-3">Kembali</NuxtLink>
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body">
-                            <h4>Hutang</h4>
+                            <h4>Pelunasan Piutang {{ transaction.title }}</h4>
                             <div class="buttons d-flex justify-content-end">
-                                <div class="input-group mb-3">
-                                    <button href="#" class="input-group-text btn me-0" :class="listState == 'all' ? 'btn-primary' : 'btn-light'"
-                                        @click="getData('all')">Semua</button>
-                                    <button href="#" class="input-group-text btn me-0" :class="listState == 'paidoff' ? 'btn-primary' : 'btn-light'"
-                                        @click="getData('paidoff')">Lunas</button>
-                                    <button href="#" class="input-group-text btn me-0" :class="listState == 'unpaidoff' ? 'btn-primary' : 'btn-light'"
-                                        @click="getData('unpaidoff')">Belum Lunas</button>
-                                </div>
                                 <button href="#" class="btn btn-light" @click="setModal('add', null)">Tambah</button>
                             </div>
                             <p class="card-text"></p>
@@ -171,7 +168,6 @@ const removeData = async (data) => {
                                             <th>No</th>
                                             <th>Judul</th>
                                             <th>Nominal</th>
-                                            <th>Status</th>
                                             <th>Kategori</th>
                                             <th>Akun</th>
                                             <th>Tanggal</th>
@@ -183,20 +179,11 @@ const removeData = async (data) => {
                                             <td>{{ idx + 1 }}</td>
                                             <td>{{ transaction.title }}</td>
                                             <td>{{ rupiah(transaction.amount) }}</td>
-                                            <td>
-                                                <span class="badge" :class="transaction.paid_off ? 'bg-success' : 'bg-danger'" >{{ transaction.paid_off ? 'Lunas' : 'Belum Lunas' }}</span>
-                                                <br>
-                                                <span class="badge bg-info" v-if="!transaction.paid_off">- {{ rupiah(transaction.amount - transaction.child_amount) }}</span>
-                                            </td>
-                                            <td><span class="badge bg-primary">{{ transaction.categories.name }}</span>
-                                            </td>
+                                            <td><span class="badge bg-primary">{{ transaction.categories.name }}</span></td>
                                             <td><span class="badge bg-info">{{ transaction.savings.name }}</span></td>
                                             <td>{{ transaction.transaction_date }}</td>
                                             <td>
                                                 <div class="buttons">
-                                                    <NuxtLink :href="`/settlement/debts/${transaction.id}`" class="btn icon btn-primary">
-                                                        <span>Pelunasan</span>
-                                                    </NuxtLink>
                                                     <button href="#" class="btn icon btn-primary"
                                                         @click="setModal('update', transaction)">
                                                         <i class="bi bi-pencil"></i>
