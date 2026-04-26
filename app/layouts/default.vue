@@ -45,13 +45,6 @@ onMounted(async () => {
   if (theme) 
     document.documentElement.setAttribute('data-bs-theme', theme)
 })
-
-const token = useCookie('token')
-if (!token.value) {
-  console.log(token)
-  navigateTo("/login")
-}
-
 </script>
 
 <script>
