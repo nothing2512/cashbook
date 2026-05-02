@@ -22,6 +22,7 @@ const currentInstalment = ref(0)
 const unpaidCurrentInstalment = ref(0)
 const salary = ref(0)
 const budget = ref(0)
+const payday = ref(0)
 
 const props = defineProps({
     setTab: Function,
@@ -71,6 +72,7 @@ onMounted(async () => {
 
         response = await fetchSetting.detail(1)
         salary.value = response.data[0].salary
+        payday.value = response.data[0].payday
 
         response = await fetchAccount.all(1, 200, {long_term: "eq.false"})
         for (const data of response.data) {
@@ -146,8 +148,8 @@ onMounted(async () => {
             </div>
         </div>
         <div class="col-12 col-lg-3">
-            <FinancialHealthChart :income="income" :saving="shortTermMoney" :expenses="expenses" :debt="debt"
-                :receivables="receivables" :loaded="loaded" :showData="showData" />
+            <FinancialHealthChart :value="calculateFinancialHealth(shortTermMoney, longTermMoney, income, expenses, debt, salary, budget, currentInstalment, payday)" 
+                :loaded="loaded" :showData="showData" />
             <CurrentMonthFinanceChart :income="income" :saving="shortTermMoney" :expenses="expenses" :loaded="loaded"
                 :show-data="showData" />
         </div>

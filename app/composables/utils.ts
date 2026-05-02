@@ -7,65 +7,149 @@ export const rupiah = (amount: Number | string, showData: Boolean) => {
     }).format(Number(amount))
 }
 
-export const calculateFinancialHealth = (income: number, expenses: number, debt: number, receivables: number) => {
-    // Guard: pemasukan tidak boleh 0 atau negatif
-    if (!income || income <= 0) {
-        return {
-            score: 0,
-            status: "Tidak sehat",
-            detail: "Pemasukan tidak valid"
-        };
-    }
+type FinancialInput = {
+    shortTermAsset: number;   // A
+    longTermAsset: number;    // B
+    income: number;           // I
+    expense: number;          // E
+    debt: number;             // D (hutang + cicilan)
+    receivable?: number;      // R (optional, belum dipakai di scoring utama)
+    budget: number;           // BGT
+    cashflow: number;         // S (gaji - cicilan - anggaran)
+};
 
-    const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(max, val));
+type FinancialResult = {
+    score: number;            // 0 - 100
+    category: "HEALTHY" | "SAFE" | "WARNING" | "DANGER";
+    breakdown: {
+        liquidity: number;
+        debt: number;
+        cashflow: number;
+        budget: number;
+    };
+    breakdown_text: {
+        liquidity: string;
+        debt: string;
+        cashflow: string;
+        budget: string;
+    };
 
-    // 1. Cashflow
-    const netCashflow = income - expenses;
-    const cashflowRatio = netCashflow / income;
+};
 
-    let cashflowScore;
-    if (cashflowRatio >= 0.5) {
-        cashflowScore = 100;
-    } else if (cashflowRatio <= -0.5) {
-        cashflowScore = 0;
-    } else {
-        cashflowScore = (cashflowRatio + 0.5) * 100;
-    }
+function clamp(value: number, min = 0, max = 1): number {
+    return Math.max(min, Math.min(max, value));
+}
 
-    // 2. Debt
-    const debtRatio = debt / income;
-    const debtScore = debtRatio >= 2
-        ? 0
-        : (1 - (debtRatio / 2)) * 100;
+function percent(val: number): string {
+    return `${Math.round(val * 100)}%`;
+}
 
-    // 3. Receivable
-    const receivableRatio = receivables / income;
-    const receivableScore = receivableRatio >= 1
-        ? 100
-        : receivableRatio * 100;
+export function calculateFinancialHealth(shortTermAsset: number, longTermAsset: number, income: number, expenses: number, debt: number, salary: number, budget: number, instalment: number, paydayStart: number): FinancialResult {
+    const A = shortTermAsset;
+    const B = longTermAsset;
+    const I = income;
+    const E = expenses;
+    const D = debt;
+    const BGT = budget;
+    const SLR = salary;
+    const ITM = instalment;
+    const S = SLR - ITM - BGT;
+    const now = new Date()
+    const currentDay = now.getDate()
 
-    // 4. Final Score
-    const finalScore =
-        (cashflowScore * 0.5) +
-        (debtScore * 0.3) +
-        (receivableScore * 0.2);
+    // --- PHASE DETECTION ---
+    const isBeforePayday = currentDay < paydayStart;
 
-    const score = Math.round(clamp(finalScore, 0, 100));
+    // --- COMPONENTS ---
+    const liquidity = E > 0 ? clamp(A + E / E) : 1;
+    const debtRatio = (A + B) > 0 ? clamp(1 - D / (A + B + E)) : 0;
 
-    // 5. Status
-    let status;
-    if (score <= 40) status = "Tidak sehat";
-    else if (score <= 60) status = "Kurang sehat";
-    else if (score <= 80) status = "Cukup sehat";
-    else status = "Sangat sehat";
+    // 🔥 FIX: gunakan salary sebagai baseline
+    const expectedIncome = isBeforePayday ? salary : salary + I;
+
+    // kalau sebelum gajian → jangan terlalu dihukum
+    const cashflowRaw = S / expectedIncome;
+
+    const cashflowRatio = isBeforePayday
+        ? clamp(cashflowRaw, -0.2, 1)   // kasih toleransi minus kecil
+        : clamp(cashflowRaw, 0, 1);
+
+    const budgetControl = BGT > 0 ? clamp(1 - E / BGT) : 0;
+
+    // --- SCORE ---
+    const rawScore =
+        0.3 * liquidity +
+        0.25 * debtRatio +
+        0.25 * cashflowRatio +
+        0.2 * budgetControl;
+
+    const score = Math.round(clamp(rawScore, 0, 1) * 100);
+
+    // --- CATEGORY ---
+    let category: FinancialResult["category"];
+    if (score >= 80) category = "HEALTHY";
+    else if (score >= 60) category = "SAFE";
+    else if (score >= 40) category = "WARNING";
+    else category = "DANGER";
+
+    // --- TEXT ---
+    const liquidityText =
+        E === 0
+            ? "Belum ada pengeluaran, likuiditas belum terukur."
+            : liquidity >= 1
+                ? `Aman — aset likuid menutup ${percent(liquidity)} pengeluaran.`
+                : `Terbatas — hanya ${percent(liquidity)} pengeluaran yang tertutup.`;
+
+    const debtText =
+        A + B === 0
+            ? "Tidak ada aset, rasio hutang tidak bisa dihitung."
+            : debtRatio >= 0.7
+                ? "Sehat — hutang rendah terhadap aset."
+                : debtRatio >= 0.4
+                    ? "Perlu perhatian — hutang mulai membebani."
+                    : "Berisiko — hutang terlalu besar.";
+
+    const cashflowText = (() => {
+        if (isBeforePayday) {
+            return `Normal — belum masuk periode gajian. Evaluasi berdasarkan proyeksi (${percent(cashflowRaw)} dari gaji).`;
+        }
+
+        if (cashflowRatio > 0.2)
+            return `Sehat — sisa ${percent(cashflowRatio)} dari gaji.`;
+
+        if (cashflowRatio > 0)
+            return `Tipis — sisa ${percent(cashflowRatio)} dari gaji.`;
+
+        return `Negatif — pengeluaran melebihi gaji.`;
+    })();
+
+    const budgetText =
+        BGT === 0
+            ? "Budget belum ditentukan."
+            : budgetControl >= 0.3
+                ? "Disiplin — masih dalam batas budget."
+                : budgetControl >= 0
+                    ? "Hampir habis — mendekati limit."
+                    : "Over budget — sudah melewati anggaran.";
 
     return {
         score,
-        status,
+        category,
         breakdown: {
-            cashflowScore: Math.round(cashflowScore),
-            debtScore: Math.round(debtScore),
-            receivableScore: Math.round(receivableScore)
-        }
+            liquidity,
+            debt: debtRatio,
+            cashflow: cashflowRatio,
+            budget: budgetControl,
+        },
+        breakdown_text: {
+            liquidity: liquidityText,
+            debt: debtText,
+            cashflow: cashflowText,
+            budget: budgetText,
+        },
     };
+}
+
+export function format2Digit(num: number) {
+    return Math.trunc(num * 100) / 100;
 }
