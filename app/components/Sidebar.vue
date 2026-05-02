@@ -18,6 +18,10 @@ const accounts = ref()
 const categories = ref()
 
 onMounted(async () => {
+    await getData()
+})
+
+const getData = async () => {
     const { data } = await fetchSetting.detail(1)
     setting.value = data[0]
 
@@ -28,9 +32,12 @@ onMounted(async () => {
     categories.value = response.data
 
     document.documentElement.setAttribute('data-bs-theme', setting.value.theme)
-})
+}
 
-const onSubmitModal = async (form) => await fetchSetting.edit(form)
+const onSubmitModal = async (form) => {
+    await fetchSetting.edit(form)
+    await getData()
+}
 
 const onCloseModal = async () => {
     showModal.value = false
