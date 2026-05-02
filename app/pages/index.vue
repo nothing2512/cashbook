@@ -71,15 +71,17 @@ onMounted(async () => {
         unpaidCurrentInstalment.value = await fetchDashboard.fetchUnpaidCurrentInstalment()
 
         response = await fetchSetting.detail(1)
-        salary.value = response.data[0].salary
-        payday.value = response.data[0].payday
+        if (response.data.length > 0) {
+            salary.value = response.data[0].salary
+            payday.value = response.data[0].payday
+        }
 
-        response = await fetchAccount.all(1, 200, {long_term: "eq.false"})
+        response = await fetchAccount.all(1, 200, { long_term: "eq.false" })
         for (const data of response.data) {
             shortTermMoney.value += data.amount
         }
 
-        response = await fetchAccount.all(1, 200, {long_term: "eq.true"})
+        response = await fetchAccount.all(1, 200, { long_term: "eq.true" })
         for (const data of response.data) {
             longTermMoney.value += data.amount
         }
@@ -118,10 +120,11 @@ onMounted(async () => {
                     :icon="'iconly-boldBuy'" bg="secondary" href="/expenses" />
             </div>
             <div class="row">
-                <CardStat title="Sisa tagihan bulan ini" :value="rupiah(unpaidCurrentInstalment, showData)" :color="'blue'"
-                    :icon="'iconly-boldWallet'" :bg="unpaidCurrentInstalment > 0 ? 'danger' : ''" href="/instalment" />
+                <CardStat title="Sisa tagihan bulan ini" :value="rupiah(unpaidCurrentInstalment, showData)"
+                    :color="'blue'" :icon="'iconly-boldWallet'" :bg="unpaidCurrentInstalment > 0 ? 'danger' : ''"
+                    href="/instalment" />
                 <CardStat title="Total hutang tersisa" :value="rupiah(debt, showData)" :color="'black'"
-                    :icon="'iconly-boldPaper'" :bg="debt > 0 ? 'danger': 'success'" href="/debts" />
+                    :icon="'iconly-boldPaper'" :bg="debt > 0 ? 'danger' : 'success'" href="/debts" />
                 <CardStat title="Total piutang tersisa" :value="rupiah(receivables, showData)" :color="'red'"
                     :icon="'iconly-boldFolder'" bg="success" href="/receivables" />
                 <CardStat title="Anggaran tiap bulan" :value="rupiah(budget, showData)" :color="'green'"
@@ -131,11 +134,12 @@ onMounted(async () => {
                 <CardStat title="Total cicilan tersisa" :value="rupiah(instalment, showData)" :color="'green'"
                     :icon="'iconly-boldBag-2'" :bg="instalment > 0 ? 'danger' : ''" href="/instalment" />
                 <CardStat title="Sisa bulan cicilan" :value="`${totalInstalment} Bulan`" :color="'red'"
-                    :icon="'iconly-boldTicket'" :bg="totalInstalment > 0 ? 'danger': ''" href="/instalment" />
+                    :icon="'iconly-boldTicket'" :bg="totalInstalment > 0 ? 'danger' : ''" href="/instalment" />
                 <CardStat title="Hutang + cicilan" :value="rupiah(debt + instalment, showData)" :color="'purple'"
-                    :icon="'iconly-boldActivity'" :bg="debt + instalment > 0 ? 'danger': ''" />
-                <CardStat title="Gaji - cicilan - anggaran" :value="rupiah(salary - currentInstalment - budget, showData)" :color="'blue'"
-                    :icon="'iconly-boldBuy'" :bg="salary - currentInstalment - budget < 0 ? 'danger': ''" />
+                    :icon="'iconly-boldActivity'" :bg="debt + instalment > 0 ? 'danger' : ''" />
+                <CardStat title="Gaji - cicilan - anggaran"
+                    :value="rupiah(salary - currentInstalment - budget, showData)" :color="'blue'"
+                    :icon="'iconly-boldBuy'" :bg="salary - currentInstalment - budget < 0 ? 'danger' : ''" />
             </div>
         </div>
         <div class="col-12 col-lg-9">
@@ -148,7 +152,8 @@ onMounted(async () => {
             </div>
         </div>
         <div class="col-12 col-lg-3">
-            <FinancialHealthChart :value="calculateFinancialHealth(shortTermMoney, longTermMoney, income, expenses, debt, salary, budget, currentInstalment, payday)" 
+            <FinancialHealthChart
+                :value="calculateFinancialHealth(shortTermMoney, longTermMoney, income, expenses, debt, salary, budget, currentInstalment, payday)"
                 :loaded="loaded" :showData="showData" />
             <CurrentMonthFinanceChart :income="income" :saving="shortTermMoney" :expenses="expenses" :loaded="loaded"
                 :show-data="showData" />

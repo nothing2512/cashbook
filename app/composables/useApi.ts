@@ -6,7 +6,11 @@ export const useApi = () => {
         if (body) delete (body.id)
         const token = useCookie('token')
         if (!token.value) {
-            return navigateTo('/login')
+            navigateTo('/login')
+            return {
+                data: [],
+                headers: {}
+            }
         }
 
         let headers = {
@@ -45,7 +49,13 @@ export const useApi = () => {
     const fetchSupabaseList = async (method: any, endpoint: string, page: number, pageSize: number = 10, filters: any = {}) => {
         const token = useCookie('token')
         if (!token.value) {
-            return navigateTo('/login')
+            navigateTo('/login')
+            return {
+                data: [],
+                headers: {},
+                totalData: 0,
+                totalPage: 0
+            }
         }
 
         const separator = endpoint.includes("?") ? "&" : "?";
