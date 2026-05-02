@@ -14,7 +14,10 @@ const incomeList = ref()
 const expensesList = ref()
 const debtList = ref()
 const receivablesList = ref()
-const totalMoney = ref(0)
+const shortTermMoney = ref(0)
+const longTermMoney = ref(0)
+const instalment = ref(0)
+const totalInstalment = ref(0)
 const currentInstalment = ref(0)
 const unpaidCurrentInstalment = ref(0)
 const salary = ref(0)
@@ -29,6 +32,7 @@ props.setTab("dashboard")
 
 const { fetchDashboard } = useDashboard()
 const { fetchAccount, fetchSetting } = useCrud()
+const { fetchTransaction } = useTransaction()
 
 const showErr = (e) => {
     props.setLoading(false)
@@ -67,10 +71,21 @@ onMounted(async () => {
         response = await fetchSetting.detail(1)
         salary.value = response.data[0].salary
 
-        response = await fetchAccount.all(1, 200)
+        response = await fetchAccount.all(1, 200, {long_term: "eq.false"})
         for (const data of response.data) {
-            totalMoney.value += data.amount
+            shortTermMoney.value += data.amount
         }
+
+        response = await fetchAccount.all(1, 200, {long_term: "eq.true"})
+        for (const data of response.data) {
+            longTermMoney.value += data.amount
+        }
+
+        response = await fetchTransaction.monthlyInstalments(1, 999)
+        for (const data of response.data) {
+            instalment.value += data.sum
+        }
+        totalInstalment.value = response.totalData
 
         loaded.value = true
         props.setLoading(false)
@@ -85,15 +100,14 @@ onMounted(async () => {
     <section class="row">
         <div class="col-12">
             <div class="row">
-                <CardStat title="Total uang saat ini" :value="rupiah(totalMoney, showData)" :color="'green'"
+                <CardStat title="Total uang jangka pendek" :value="rupiah(shortTermMoney, showData)" :color="'green'"
                     :icon="'iconly-boldBag-2'" />
-                <CardStat title="Gaji pokok" :value="rupiah(salary, showData)" :color="'red'"
+                <CardStat title="Total uang jangka panjang" :value="rupiah(longTermMoney, showData)" :color="'red'"
                     :icon="'iconly-boldTicket'" />
                 <CardStat title="Pemasukan bulan ini" :value="rupiah(income, showData)" :color="'purple'"
                     :icon="'iconly-boldActivity'" />
                 <CardStat title="Pengeluaran bulan ini" :value="rupiah(expenses, showData)" :color="'blue'"
                     :icon="'iconly-boldBuy'" />
-
             </div>
             <div class="row">
                 <CardStat title="Tagihan bulan ini" :value="rupiah(unpaidCurrentInstalment, showData)" :color="'blue'"
@@ -104,6 +118,16 @@ onMounted(async () => {
                     :icon="'iconly-boldFolder'" />
                 <CardStat title="Gaji - tagihan bulan ini" :value="rupiah(salary - currentInstalment, showData)" :color="'green'"
                     :icon="'iconly-boldDiscount'" />
+            </div>
+            <div class="row">
+                <CardStat title="Total cicilan tersisa" :value="rupiah(instalment, showData)" :color="'green'"
+                    :icon="'iconly-boldBag-2'" />
+                <CardStat title="Sisa bulan cicilan" :value="`${totalInstalment} Bulan`" :color="'red'"
+                    :icon="'iconly-boldTicket'" />
+                <CardStat title="Hutang + cicilan" :value="rupiah(debt + instalment, showData)" :color="'purple'"
+                    :icon="'iconly-boldActivity'" />
+                <CardStat title="<Under Development>" :value="rupiah(0, showData)" :color="'blue'"
+                    :icon="'iconly-boldBuy'" />
             </div>
         </div>
         <div class="col-12 col-lg-9">
@@ -116,9 +140,9 @@ onMounted(async () => {
             </div>
         </div>
         <div class="col-12 col-lg-3">
-            <FinancialHealthChart :income="income" :saving="totalMoney" :expenses="expenses" :debt="debt"
+            <FinancialHealthChart :income="income" :saving="shortTermMoney" :expenses="expenses" :debt="debt"
                 :receivables="receivables" :loaded="loaded" :showData="showData" />
-            <CurrentMonthFinanceChart :income="income" :saving="totalMoney" :expenses="expenses" :loaded="loaded"
+            <CurrentMonthFinanceChart :income="income" :saving="shortTermMoney" :expenses="expenses" :loaded="loaded"
                 :show-data="showData" />
         </div>
     </section>

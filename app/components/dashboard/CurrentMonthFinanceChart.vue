@@ -26,7 +26,7 @@ watch(() => props.loaded, (newVal, oldVal) => {
             tooltip: {
                 y: {
                     formatter: function (val) {
-                        return rupiah(val)
+                        return rupiah(val, true)
                     }
                 }
             },

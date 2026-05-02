@@ -11,7 +11,8 @@ let form = reactive({
     id: props.data?.id || 0,
     name: props.data?.name || '',
     num: props.data?.num || '',
-    amount: props.data?.amount || 0
+    amount: props.data?.amount || 0,
+    long_term: props.data?.long_term || false,
 })
 
 let modal = null
@@ -30,7 +31,8 @@ watch(() => props.show, (newVal, oldVal) => {
             id: props.data?.id || 0,
             name: props.data?.name || '',
             num: props.data?.num || '',
-            amount: props.data?.amount || 0
+            amount: props.data?.amount || 0,
+    long_term: props.data?.long_term || false,
         })
         modal.show()
     }
@@ -70,21 +72,30 @@ const onSubmit = () => {
                     </div>
                     <form @submit.prevent="onSubmit">
                         <div class="modal-body">
+
                             <div class="form-group mandatory">
                                 <label class="form-label" for="name">Akun </label>
                                 <input id="name" required="true" type="text" placeholder="Nama penyimpanan (e.g. BCA, OVO, dll.)"
                                     class="form-control" v-model="form.name">
                             </div>
+
                             <div class="form-group">
                                 <label class="form-label" for="num">Nomor Akun </label>
                                 <input id="num" required="false" type="text" placeholder="Nomor Akun"
                                     class="form-control" v-model="form.num">
                             </div>
+
                             <div class="form-group mandatory">
                                 <label class="form-label" for="amount">Nominal </label>
                                 <input id="amount" required="true" type="number" placeholder="Nominal Simpanan"
                                     class="form-control" v-model="form.amount">
                             </div>
+
+                            <div class="form-check form-switch mt-3 mb-3">
+                                <input class="form-check-input" type="checkbox" id="long_term" v-model="form.long_term">
+                                <label class="form-check-label" for="long_term">Tabungan jangka panjang</label>
+                            </div>
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">

@@ -25,10 +25,10 @@ const getData = async () => {
     const { data } = await fetchSetting.detail(1)
     setting.value = data[0]
 
-    let response = await fetchAccount.all(1, 200)
+    let response = await fetchAccount.all(1, 999)
     accounts.value = response.data
 
-    response = await fetchCategory.all(1, 200)
+    response = await fetchCategory.all(1, 999)
     categories.value = response.data
 
     document.documentElement.setAttribute('data-bs-theme', setting.value.theme)

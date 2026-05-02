@@ -37,11 +37,15 @@ export const useApi = () => {
     }
   }
 
-  const fetchSupabaseList = async (method: any, endpoint: string, page: number, pageSize:number=10) => {
+  const fetchSupabaseList = async (method: any, endpoint: string, page: number, pageSize:number=10, filters:any={}) => {
     const token = useCookie('token')
     if (!token.value) {
       return navigateTo('/login')
     }
+
+    const separator = endpoint.includes("?") ? "&" : "?";
+    endpoint = endpoint + separator + new URLSearchParams(filters).toString();
+
 
     let headers = {
       "apikey": config.public.supabaseApiKey,

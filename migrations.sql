@@ -460,3 +460,5 @@ SELECT cron.schedule(
   '0 17 * * *',
   $$ SELECT run_salary_cron(); $$
 );
+
+ALTER TABLE savings ADD COLUMN long_term BOOLEAN NOT NULL DEFAULT false;

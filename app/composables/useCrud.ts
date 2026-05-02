@@ -1,7 +1,7 @@
 const crud = (base: string) => {
     const { fetchSupabaseList, fetchSupabase } = useApi()
 
-    const all = async (page: number, pageSize:number=10) => fetchSupabaseList("GET", `/${base}?order=id.asc`, page, pageSize)
+    const all = async (page: number, pageSize:number=10, filters:Object={}) => fetchSupabaseList("GET", `/${base}?order=id.asc`, page, pageSize, filters)
 
     const detail = async (id: number) => fetchSupabaseList("GET", `/${base}?id=eq.${id}&order=id.asc`, 1, 1)
 

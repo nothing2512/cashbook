@@ -142,7 +142,7 @@ const removeData = async (data) => {
                                     <tbody>
                                         <tr v-for="(account, idx) in accounts">
                                             <td>{{ idx + 1 }}</td>
-                                            <td>{{ account.name }}</td>
+                                            <td>{{ account.name }} &nbsp; <span class="badge bg-primary" v-if="account.long_term">Jangka panjang</span></td>
                                             <td>{{ account.num ? account.num : '-' }}</td>
                                             <td>{{ rupiah(account.amount, props.showData) }}</td>
                                             <td>

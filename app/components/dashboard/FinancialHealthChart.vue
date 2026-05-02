@@ -58,15 +58,10 @@ watch(() => props.loaded, (newVal, oldVal) => {
 
                     dataLabels: {
                         show: true,
-                        name: {
-                            offsetY: -10,
-                            show: true,
-                            color: "#888",
-                            fontSize: "17px",
-                        },
+                        name: { show: false },
                         value: {
                             formatter: function (val) {
-                                return parseInt(val)
+                                return `${parseInt(val)} %`
                             },
                             color: "#111",
                             fontSize: "36px",
@@ -91,7 +86,6 @@ watch(() => props.loaded, (newVal, oldVal) => {
             stroke: {
                 lineCap: "round",
             },
-            labels: ["Persen"],
         }
     )
     chartVisitorsProfile.render()
