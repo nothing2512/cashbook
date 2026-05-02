@@ -153,7 +153,7 @@ const removeData = async (data) => {
                         <div class="card-body">
                             <h4>Piutang</h4>
                             <div class="buttons d-flex justify-content-end">
-                                <div class="input-group mb-3">
+                                <div class="input-group">
                                     <button href="#" class="input-group-text btn me-0" :class="listState == 'all' ? 'btn-primary' : 'btn-light'"
                                         @click="getData('all')">Semua</button>
                                     <button href="#" class="input-group-text btn me-0" :class="listState == 'paidoff' ? 'btn-primary' : 'btn-light'"
