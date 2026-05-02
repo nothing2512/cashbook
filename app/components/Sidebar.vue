@@ -78,14 +78,6 @@ const onCloseModal = async () => {
             <div class="sidebar-menu">
                 <ul class="menu">
 
-                    <li class="sidebar-item" :class="tab == 'accounts' ? 'active' : ''">
-                        <a href="#" class='sidebar-link' @click.prevent="() => showModal=true">
-                            <span>Settings</span>
-                        </a>
-                    </li>
-
-                    <hr>
-
                     <li class="sidebar-item" :class="tab == 'dashboard' ? 'active' : ''">
                         <NuxtLink href="/" class='sidebar-link' @click="setTab('dashboard')">
                             <i class="bi bi-grid-fill"></i>
@@ -145,6 +137,13 @@ const onCloseModal = async () => {
                     </li>
 
                     <hr>
+
+                    <li class="sidebar-item" :class="tab == 'accounts' ? 'active' : ''">
+                        <a href="#" class='sidebar-link' @click.prevent="() => showModal=true">
+                            <i class="bi bi-gear-fill"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
 
                     <li class="sidebar-item">
                         <NuxtLink href="/login" class='sidebar-link' @click="logout">
