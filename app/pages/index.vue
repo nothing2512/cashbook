@@ -87,7 +87,7 @@ onMounted(async () => {
             <div class="row">
                 <CardStat title="Total uang saat ini" :value="rupiah(totalMoney, showData)" :color="'green'"
                     :icon="'iconly-boldBag-2'" />
-                <CardStat title="Gaji bulan ini" :value="rupiah(salary, showData)" :color="'red'"
+                <CardStat title="Gaji pokok" :value="rupiah(salary, showData)" :color="'red'"
                     :icon="'iconly-boldTicket'" />
                 <CardStat title="Pemasukan bulan ini" :value="rupiah(income, showData)" :color="'purple'"
                     :icon="'iconly-boldActivity'" />
