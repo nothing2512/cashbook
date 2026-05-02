@@ -55,7 +55,7 @@ export const useTransaction = () => {
 
     const payInstalment = async (month: number, year: number) => fetchSupabase("PATCH", `/instalment_items?month=eq.${month}&year=eq.${year}`, {paid: true})
 
-    const monthlyInstalments = async (page: number, pageSize:number=10) => fetchSupabaseList("GET", `/instalment_views?paid=eq.false&order=year.asc,order=month.asc`, page, pageSize)
+    const monthlyInstalments = async (page: number, pageSize:number=10) => fetchSupabaseList("GET", `/instalment_views?paid=eq.false&order=year.asc,month.asc`, page, pageSize)
 
     return { fetchTransaction: { add, edit, remove, incomes, expenses, debts, receivables, settlements, detail, monthlyInstalments, payInstalment, instalments } }
 }

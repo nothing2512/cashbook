@@ -5,6 +5,7 @@ CREATE TYPE transactions_status_enum AS ENUM ('paid', 'unpaid');
 -- Tables
 CREATE TABLE savings (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id UUID NOT NULL DEFAULT auth.uid(),
     name VARCHAR(30) NOT NULL,
     num VARCHAR(30) NOT NULL,
     amount NUMERIC(15, 2) NOT NULL,
@@ -14,6 +15,7 @@ CREATE TABLE savings (
 
 CREATE TABLE categories (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id UUID NOT NULL DEFAULT auth.uid(),
     name VARCHAR(30) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW()
@@ -21,6 +23,7 @@ CREATE TABLE categories (
 
 CREATE TABLE transactions (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id UUID NOT NULL DEFAULT auth.uid(),
     parent_id BIGINT,
     saving_id BIGINT NOT NULL,
     category_id BIGINT NOT NULL, 
@@ -48,13 +51,13 @@ CREATE TABLE transactions (
 
 -- policy 
 alter table savings enable row level security;
-create policy "savings policy" on savings for all to authenticated using ( true );
+create policy "savings policy" on savings for all to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 alter table categories enable row level security;
-create policy "categories policy" on categories for all to authenticated using ( true );
+create policy "categories policy" on categories for all to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 alter table transactions enable row level security;
-create policy "transactions policy" on transactions for all to authenticated using ( true );
+create policy "transactions policy" on transactions for all to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 -- default data
 INSERT INTO savings (name, num, amount) VALUES ('Cash', '', 0);
@@ -275,6 +278,7 @@ GRANT SELECT ON debt_views TO authenticated;
 
 CREATE TABLE instalments (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id UUID NOT NULL DEFAULT auth.uid(),
     name VARCHAR(30) NOT NULL,
     startmonth INT NOT NULL,
     startyear INT NOT NULL,
@@ -287,6 +291,7 @@ CREATE TABLE instalments (
 
 CREATE TABLE instalment_items (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id UUID NOT NULL DEFAULT auth.uid(),
     instalment_id BIGINT NOT NULL,
     amount NUMERIC(15, 2) NOT NULL,
     "month" INT NOT NULL,
@@ -303,10 +308,10 @@ CREATE TABLE instalment_items (
 );
 
 alter table instalments enable row level security;
-create policy "instalments policy" on instalments for all to authenticated using ( true );
+create policy "instalments policy" on instalments for all to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 alter table instalment_items enable row level security;
-create policy "instalment_items policy" on instalment_items for all to authenticated using ( true );
+create policy "instalment_items policy" on instalment_items for all to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 CREATE OR REPLACE VIEW instalment_views AS
 SELECT 
@@ -388,6 +393,7 @@ EXECUTE FUNCTION trg_instalments_items_after_updated();
 
 CREATE TABLE settings (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id UUID NOT NULL DEFAULT auth.uid(),
     salary NUMERIC(15, 2) NOT NULL DEFAULT 0,
     payday INT NOT NULL DEFAULT 0,
     show_digit BOOLEAN NOT NULL DEFAULT false,
@@ -400,7 +406,7 @@ CREATE TABLE settings (
 );
 
 alter table settings enable row level security;
-create policy "settings policy" on settings for all to authenticated using ( true );
+create policy "settings policy" on settings for all to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 INSERT INTO settings (salary, payday, show_digit, theme, auto_add_salary) VALUES (0, 0, false, 'dark', false);
 
@@ -465,6 +471,7 @@ ALTER TABLE savings ADD COLUMN long_term BOOLEAN NOT NULL DEFAULT false;
 
 CREATE TABLE budgets (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id UUID NOT NULL DEFAULT auth.uid(),
     category_id BIGINT NOT NULL, 
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
@@ -480,4 +487,4 @@ CREATE TABLE budgets (
 );
 
 alter table budgets enable row level security;
-create policy "budgets policy" on budgets for all to authenticated using ( true );
+create policy "budgets policy" on budgets for all to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id);
