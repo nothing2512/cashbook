@@ -59,7 +59,7 @@ const setTab = (value) => {
     if (value == "incomes") pageTitle.value = "Pemasukan"
     if (value == "receivables") pageTitle.value = "Piutang"
     if (value == "instalment") pageTitle.value = "Cicilan"
-    if (value == "budgets") pageTitle.value = "Rencana Bulanan"
+    if (value == "budgets") pageTitle.value = "Anggaran Bulanan"
     closeSidebar()
 }
 
