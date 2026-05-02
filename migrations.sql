@@ -462,3 +462,22 @@ SELECT cron.schedule(
 );
 
 ALTER TABLE savings ADD COLUMN long_term BOOLEAN NOT NULL DEFAULT false;
+
+CREATE TABLE budgets (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    category_id BIGINT NOT NULL, 
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    amount NUMERIC(15, 2) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT fk_budgets_categories
+        FOREIGN KEY (category_id)
+        REFERENCES categories(id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
+);
+
+alter table budgets enable row level security;
+create policy "budgets policy" on budgets for all to authenticated using ( true );

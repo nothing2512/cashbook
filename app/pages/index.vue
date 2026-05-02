@@ -21,6 +21,7 @@ const totalInstalment = ref(0)
 const currentInstalment = ref(0)
 const unpaidCurrentInstalment = ref(0)
 const salary = ref(0)
+const budget = ref(0)
 
 const props = defineProps({
     setTab: Function,
@@ -31,14 +32,14 @@ const props = defineProps({
 props.setTab("dashboard")
 
 const { fetchDashboard } = useDashboard()
-const { fetchAccount, fetchSetting } = useCrud()
+const { fetchAccount, fetchSetting, fetchBudget } = useCrud()
 const { fetchTransaction } = useTransaction()
 
 const showErr = (e) => {
     props.setLoading(false)
     Swal.fire({
         title: "Gagal!",
-        text: e.msg,
+        text: e.msg || e,
         icon: "warning",
         confirmButtonText: "OK"
     })
@@ -81,6 +82,11 @@ onMounted(async () => {
             longTermMoney.value += data.amount
         }
 
+        response = await fetchBudget.all(1, 200)
+        for (const data of response.data) {
+            budget.value += data.amount
+        }
+
         response = await fetchTransaction.monthlyInstalments(1, 999)
         for (const data of response.data) {
             instalment.value += data.sum
@@ -116,7 +122,7 @@ onMounted(async () => {
                     :icon="'iconly-boldPaper'" />
                 <CardStat title="Total piutang tersisa" :value="rupiah(receivables, showData)" :color="'red'"
                     :icon="'iconly-boldFolder'" />
-                <CardStat title="Gaji - tagihan bulan ini" :value="rupiah(salary - currentInstalment, showData)" :color="'green'"
+                <CardStat title="Anggaran tiap bulan" :value="rupiah(budget, showData)" :color="'green'"
                     :icon="'iconly-boldDiscount'" />
             </div>
             <div class="row">
@@ -126,7 +132,7 @@ onMounted(async () => {
                     :icon="'iconly-boldTicket'" />
                 <CardStat title="Hutang + cicilan" :value="rupiah(debt + instalment, showData)" :color="'purple'"
                     :icon="'iconly-boldActivity'" />
-                <CardStat title="<Under Development>" :value="rupiah(0, showData)" :color="'blue'"
+                <CardStat title="Gaji - cicilan - anggaran" :value="rupiah(salary - currentInstalment - budget, showData)" :color="'blue'"
                     :icon="'iconly-boldBuy'" />
             </div>
         </div>

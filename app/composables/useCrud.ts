@@ -20,6 +20,7 @@ export const useCrud = () => {
         fetchAccount: crud("savings"),
         fetchTransaction: crud("transactions"),
         fetchInstalment: crud("instalments"),
-        fetchSetting: crud("settings")
+        fetchSetting: crud("settings"),
+        fetchBudget: crud("budgets")
     }
 }

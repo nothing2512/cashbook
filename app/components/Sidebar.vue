@@ -136,6 +136,13 @@ const onCloseModal = async () => {
                         </NuxtLink>
                     </li>
 
+                    <li class="sidebar-item" :class="tab == 'budgets' ? 'active' : ''">
+                        <NuxtLink href="/budgets" class='sidebar-link' @click="setTab('budgets')">
+                            <i class="bi bi-calculator"></i>
+                            <span>Anggaran Bulanan</span>
+                        </NuxtLink>
+                    </li>
+
                     <hr>
 
                     <li class="sidebar-item" :class="tab == 'categories' ? 'active' : ''">

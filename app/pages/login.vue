@@ -24,7 +24,7 @@ const login = async () => {
         setLoading(false)
         Swal.fire({
             title: "Gagal!",
-            text: e.msg,
+            text: e.msg || e,
             icon: "warning",
             confirmButtonText: "OK"
         })
