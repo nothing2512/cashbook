@@ -70,7 +70,7 @@ const getMonthlyData = async () => {
     props.setLoading(true)
     try {
 
-        response = await fetchTransaction.monthlyInstalments(pageMonthly.value)
+        const response = await fetchTransaction.monthlyInstalments(pageMonthly.value)
         monthlyInstalments.value = response.data
         totalDataMonthly.value = response.totalData
         totalPageMonthly.value = response.totalPage
