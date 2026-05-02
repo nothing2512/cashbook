@@ -33,7 +33,7 @@ export const useApi = () => {
         return navigateTo('/login')
       }
 
-      throw err
+      throw err.response._data
     }
   }
 
@@ -82,7 +82,7 @@ export const useApi = () => {
         return navigateTo('/login')
       }
 
-      throw err
+      throw err.response._data
     }
   }
 

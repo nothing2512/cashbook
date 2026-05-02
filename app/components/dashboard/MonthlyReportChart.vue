@@ -7,6 +7,7 @@ const props = defineProps({
     expenses: Array,
     expensesText: String,
     loaded: Boolean,
+    showData: Boolean,
 })
 
 const IndonesianMonth = [
@@ -85,7 +86,7 @@ watch(() => props.loaded, (newVal, oldVal) => {
             <div class="card-header">
                 <h4>{{ props.title }}</h4>
             </div>
-            <div class="card-body">
+            <div class="card-body" :style="showData ? '' : 'filter: blur(.5rem)'">
                 <div :id="props.id"></div>
             </div>
         </div>

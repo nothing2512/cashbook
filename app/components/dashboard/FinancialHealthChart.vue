@@ -4,12 +4,14 @@ const props = defineProps({
     expenses: Number,
     debt: Number,
     expenses: Number,
-    loaded: Boolean
+    saving: Number,
+    loaded: Boolean,
+    showData: Boolean,
 })
 
 watch(() => props.loaded, (newVal, oldVal) => {
     if (!props.loaded) return;
-    const health = calculateFinancialHealth(props.income, props.expenses, props.debt, props.expenses)
+    const health = calculateFinancialHealth(props.income == 0 ? props.saving : props.income, props.expenses, props.debt, props.expenses)
     const chartVisitorsProfile = new ApexCharts(
         document.getElementById("finance-health"),
         {
@@ -103,7 +105,7 @@ watch(() => props.loaded, (newVal, oldVal) => {
             <div class="card-header">
                 <h4>Kesehatan Finansial</h4>
             </div>
-            <div class="card-body">
+            <div class="card-body" :style="showData ? '' : 'filter: blur(.5rem)'">
                 <div id="finance-health"></div>
             </div>
         </div>

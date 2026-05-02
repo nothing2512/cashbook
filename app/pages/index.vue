@@ -18,7 +18,8 @@ const totalMoney = ref(0)
 
 const props = defineProps({
     setTab: Function,
-    setLoading: Function
+    setLoading: Function,
+    showData: Boolean
 })
 
 props.setTab("dashboard")
@@ -75,30 +76,30 @@ onMounted(async () => {
     <section class="row">
         <div class="col-12">
             <div class="row">
-                <CardStat title="Total uang saat ini" :value="rupiah(totalMoney)" :color="'green'"
+                <CardStat title="Total uang saat ini" :value="rupiah(totalMoney, showData)" :color="'green'"
                     :icon="'iconly-boldBag-2'" />
-                <CardStat title="Pemasukan bulan ini" :value="rupiah(income)" :color="'purple'"
+                <CardStat title="Pemasukan bulan ini" :value="rupiah(income, showData)" :color="'purple'"
                     :icon="'iconly-boldActivity'" />
-                <CardStat title="Pengeluaran bulan ini" :value="rupiah(expenses)" :color="'blue'"
+                <CardStat title="Pengeluaran bulan ini" :value="rupiah(expenses, showData)" :color="'blue'"
                     :icon="'iconly-boldBuy'" />
-                <CardStat title="Total hutang tersisa" :value="rupiah(debt)" :color="'black'"
+                <CardStat title="Total hutang tersisa" :value="rupiah(debt, showData)" :color="'black'"
                     :icon="'iconly-boldPaper'" />
-                <CardStat title="Total piutang tersisa" :value="rupiah(receivables)" :color="'red'"
+                <CardStat title="Total piutang tersisa" :value="rupiah(receivables, showData)" :color="'red'"
                     :icon="'iconly-boldFolder'" />
             </div>
         </div>
         <div class="col-12 col-lg-9">
             <div class="row">
                 <MonthlyReportChart id="main-financial" title="Grafik laporan keuangan" :loaded="loaded"
-                    :incomes="incomeList" :expenses="expensesList" />
+                    :incomes="incomeList" :expenses="expensesList" :show-data="showData" />
                 <MonthlyReportChart id="debt-financial" title="Grafik laporan hutang" :loaded="loaded"
-                    :incomes="debtList" :expenses="receivablesList" income-text="Hutang" expenses-text="Piutang" />
+                    :incomes="debtList" :expenses="receivablesList" income-text="Hutang" expenses-text="Piutang" :show-data="showData" />
             </div>
         </div>
         <div class="col-12 col-lg-3">
-            <FinancialHealthChart :income="income" :expenses="expenses" :debt="debt" :receivables="receivables"
-                :loaded="loaded" />
-            <CurrentMonthFinanceChart :income="income" :expenses="expenses" :loaded="loaded" />
+            <FinancialHealthChart :income="income" :saving="totalMoney" :expenses="expenses" :debt="debt" :receivables="receivables"
+                :loaded="loaded" :showData="showData" />
+            <CurrentMonthFinanceChart :income="income" :saving="totalMoney" :expenses="expenses" :loaded="loaded" :show-data="showData" />
         </div>
     </section>
 </template>
