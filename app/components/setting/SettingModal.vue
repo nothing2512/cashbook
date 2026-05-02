@@ -5,13 +5,17 @@ var props = defineProps({
     onSubmit: Function,
     onCloseModal: Function,
     data: Object,
+    savings: Array,
+    categories: Array,
 })
 
 let form = reactive({
     id: props.data?.id || 0,
     salary: props.data?.salary || 0,
     payday: props.data?.payday || 0,
-    auto_add_salary: props.data?.auto_add_salary || false
+    auto_add_salary: props.data?.auto_add_salary || false,
+    category_id: props.data?.category_id || 1,
+    saving_id: props.data?.saving_id || 1
 })
 
 let modal = null
@@ -30,7 +34,9 @@ watch(() => props.show, (newVal, oldVal) => {
             id: props.data?.id || 0,
             salary: props.data?.salary || 0,
             payday: props.data?.payday || 0,
-            auto_add_salary: props.data?.auto_add_salary || false
+            auto_add_salary: props.data?.auto_add_salary || false,
+            category_id: props.data?.category_id || 1,
+            saving_id: props.data?.saving_id || 1
         })
         modal.show()
     }
@@ -92,11 +98,26 @@ watch(form, (newVal, oldVal) => {
                                     class="form-control" v-model="form.payday">
                             </div>
 
-                            <div class="form-check form-switch mt-3">
+                            <div class="form-check form-switch mt-3 mb-3">
                                 <input class="form-check-input" type="checkbox" id="auto_add_salary"
                                     v-model="form.auto_add_salary" :disabled="form.payday == 0 || form.salary == 0">
                                 <label class="form-check-label" for="auto_add_salary">Otomatis tambahkan gaji
                                     bulanan</label>
+                            </div>
+
+                            <div class="form-group mandatory">
+                                <label class="form-label" for="account">Akun Penyimpanan gaji </label>
+                                <select class="form-select" id="account" v-model="form.saving_id">
+                                    <option v-for="saving in savings" :value="saving.id">{{ saving.name }}  ( {{ rupiah(saving.amount, true) }} ) </option>
+                                </select>
+                            </div>
+
+                            <div class="form-group mandatory">
+                                <label class="form-label" for="category">Kategori gaji </label>
+                                <select class="form-select" id="account" v-model="form.category_id">
+                                    <option v-for="category in categories" :value="category.id">{{ category.name }}
+                                    </option>
+                                </select>
                             </div>
 
                         </div>

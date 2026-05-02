@@ -44,10 +44,10 @@ const showErr = (e) => {
 const getFullData = async () => {
     props.setLoading(true)
     try {
-        let response = await fetchAccount.all(page.value, 200)
+        let response = await fetchAccount.all(1, 200)
         accounts.value = response.data
 
-        response = await fetchCategory.all(page.value, 200)
+        response = await fetchCategory.all(1, 200)
         categories.value = response.data
 
         response = await fetchTransaction.detail(transactionId)

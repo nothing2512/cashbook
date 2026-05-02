@@ -10,14 +10,22 @@ const logout = () => {
     navigateTo("/login")
 }
 
-const { fetchSetting } = useCrud()
+const { fetchSetting, fetchAccount, fetchCategory } = useCrud()
 
 const setting = ref()
 const showModal = ref(false)
+const accounts = ref()
+const categories = ref()
 
 onMounted(async () => {
     const { data } = await fetchSetting.detail(1)
     setting.value = data[0]
+
+    let response = await fetchAccount.all(1, 200)
+    accounts.value = response.data
+
+    response = await fetchCategory.all(1, 200)
+    categories.value = response.data
 
     document.documentElement.setAttribute('data-bs-theme', setting.value.theme)
 })
@@ -31,14 +39,15 @@ const onCloseModal = async () => {
 </script>
 
 <template>
-    <SettingModal :data="setting" :on-close-modal="onCloseModal" :show="showModal" :on-submit="onSubmitModal" />
+    <SettingModal :data="setting" :on-close-modal="onCloseModal" :show="showModal" :on-submit="onSubmitModal" :savings="accounts" :categories="categories" />
 
     <div id="sidebar" :class="active ? 'active' : ''">
         <div class="sidebar-wrapper active">
             <div class="sidebar-header position-relative">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="logo">
-                        <img src="/mazer/assets/compiled/png/logo.png" alt="Logo" srcset="" style="width: 3rem; height: auto;">
+                        <img src="/mazer/assets/compiled/png/logo.png" alt="Logo" srcset=""
+                            style="width: 3rem; height: auto;">
                     </div>
                     <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -138,8 +147,8 @@ const onCloseModal = async () => {
 
                     <hr>
 
-                    <li class="sidebar-item" :class="tab == 'accounts' ? 'active' : ''">
-                        <a href="#" class='sidebar-link' @click.prevent="() => showModal=true">
+                    <li class="sidebar-item">
+                        <a href="#" class='sidebar-link' @click.prevent="() => showModal = true">
                             <i class="bi bi-gear-fill"></i>
                             <span>Settings</span>
                         </a>

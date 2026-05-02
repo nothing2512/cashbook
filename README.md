@@ -14,13 +14,12 @@
 
 #### Steps 1 (Github) :
 - Fork/clone this repository into your github account
-- 
 
 #### Steps 2 (Supabase) :
 - Create supabase account.
 - Create supabase authentication users. [see instruction here](https://chatgpt.com/share/69ee0a13-1f64-83a1-baa6-91deca2f455d)
+- enable pg_cron in supabase. [see instruction here](https://chatgpt.com/share/69f5fb03-9ef8-8323-8490-49e5f0bbb80c)
 - migrate database in supabase from `migrations.sql` file. [see instruction here](https://chatgpt.com/share/69ee0b26-85bc-83a1-bb64-13fd53652bc9)
-- 
 
 #### Steps 3 (vercel) :
 - Create vercel account.

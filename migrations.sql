@@ -393,6 +393,8 @@ CREATE TABLE settings (
     show_digit BOOLEAN NOT NULL DEFAULT false,
     theme VARCHAR(10) NOT NULL DEFAULT 'dark',
     auto_add_salary BOOLEAN NOT NULL DEFAULT false,
+    saving_id BIGINT NOT NULL DEFAULT 1,
+    category_id BIGINT NOT NULL DEFAULT 1,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
@@ -401,3 +403,60 @@ alter table settings enable row level security;
 create policy "settings policy" on settings for all to authenticated using ( true );
 
 INSERT INTO settings (salary, payday, show_digit, theme, auto_add_salary) VALUES (0, 0, false, 'dark', false);
+
+CREATE OR REPLACE FUNCTION run_salary_cron()
+RETURNS void
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_now TIMESTAMP := (NOW() AT TIME ZONE 'Asia/Jakarta');
+    v_month_name TEXT;
+BEGIN
+    -- Indonesian month name
+    v_month_name := CASE EXTRACT(MONTH FROM v_now)
+        WHEN 1 THEN 'Januari'
+        WHEN 2 THEN 'Februari'
+        WHEN 3 THEN 'Maret'
+        WHEN 4 THEN 'April'
+        WHEN 5 THEN 'Mei'
+        WHEN 6 THEN 'Juni'
+        WHEN 7 THEN 'Juli'
+        WHEN 8 THEN 'Agustus'
+        WHEN 9 THEN 'September'
+        WHEN 10 THEN 'Oktober'
+        WHEN 11 THEN 'November'
+        WHEN 12 THEN 'Desember'
+    END;
+
+    INSERT INTO transactions (
+        saving_id,
+        category_id,
+        title,
+        description,
+        amount,
+        kind,
+        status,
+        transaction_date
+    )
+    SELECT
+        s.saving_id,
+        s.category_id,
+        'Gaji bulan ' || v_month_name || ' ' || EXTRACT(YEAR FROM v_now),
+        'Gaji bulan ' || v_month_name || ' ' || EXTRACT(YEAR FROM v_now),
+        s.salary,
+        'income',
+        'paid',
+        v_now
+    FROM settings s
+    WHERE
+        EXTRACT(DAY FROM v_now) = s.payday
+        AND s.salary > 0
+        AND s.auto_add_salary = TRUE;
+END;
+$$;
+
+SELECT cron.schedule(
+  'daily-salary-job',
+  '0 17 * * *',
+  $$ SELECT run_salary_cron(); $$
+);
