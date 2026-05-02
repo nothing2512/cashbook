@@ -148,7 +148,9 @@ watch(() => props.loaded, (newVal, oldVal) => {
                         <p><strong>Rumus:</strong></p>
                         <p>Cashflow Ratio = S / I</p>
                         <ul>
-                            <li><strong>S (cashflow):</strong> sisa uang setelah semua kewajiban</li>
+                            <li>Sebelum tanggal gajian → gunakan salary + income sebagai expected income</li>
+                            <li>Setelah tanggal gajian → gunakan income sebagai expected income</li>
+                            <li><strong>S (cashflow):</strong> sisa uang setelah semua kewajiban [ (expected income - cicilan - budget) / expected income ]</li>
                             <li><strong>I (income / salary):</strong> pemasukan bulanan</li>
                         </ul>
                         <p><strong>Interpretasi:</strong></p>

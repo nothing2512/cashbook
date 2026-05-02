@@ -53,7 +53,6 @@ export function calculateFinancialHealth(shortTermAsset: number, longTermAsset: 
     const BGT = budget;
     const SLR = salary;
     const ITM = instalment;
-    const S = SLR - ITM - BGT;
     const now = new Date()
     const currentDay = now.getDate()
 
@@ -65,10 +64,10 @@ export function calculateFinancialHealth(shortTermAsset: number, longTermAsset: 
     const debtRatio = (A + B) > 0 ? clamp(1 - D / (A + B + E)) : 0;
 
     // 🔥 FIX: gunakan salary sebagai baseline
-    const expectedIncome = isBeforePayday ? salary : salary + I;
+    const expectedIncome = isBeforePayday ? SLR : SLR + I;
 
     // kalau sebelum gajian → jangan terlalu dihukum
-    const cashflowRaw = S / expectedIncome;
+    const cashflowRaw = (expectedIncome - ITM - BGT) / expectedIncome;
 
     const cashflowRatio = isBeforePayday
         ? clamp(cashflowRaw, -0.2, 1)   // kasih toleransi minus kecil
