@@ -385,3 +385,19 @@ CREATE TRIGGER trg_instalments_items_update
 AFTER UPDATE ON instalment_items
 FOR EACH ROW
 EXECUTE FUNCTION trg_instalments_items_after_updated();
+
+CREATE TABLE settings (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    salary NUMERIC(15, 2) NOT NULL DEFAULT 0,
+    payday INT NOT NULL DEFAULT 0,
+    show_digit BOOLEAN NOT NULL DEFAULT false,
+    theme VARCHAR(10) NOT NULL DEFAULT 'dark',
+    auto_add_salary BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+alter table settings enable row level security;
+create policy "settings policy" on settings for all to authenticated using ( true );
+
+INSERT INTO settings (salary, payday, show_digit, theme, auto_add_salary) VALUES (0, 0, false, 'dark', false);

@@ -3,13 +3,15 @@ const crud = (base: string) => {
 
     const all = async (page: number, pageSize:number=10) => fetchSupabaseList("GET", `/${base}?order=id.asc`, page, pageSize)
 
+    const detail = async (id: number) => fetchSupabaseList("GET", `/${base}?id=eq.${id}&order=id.asc`, 1, 1)
+
     const add = async (data: any) => fetchSupabase("POST", `/${base}`, data)
 
     const edit = async (data: any) => fetchSupabase("PATCH", `/${base}?id=eq.${data.id}`, data)
 
     const remove = async (id: any) => fetchSupabase("DELETE", `/${base}?id=eq.${id}`)
 
-    return { all, add, edit, remove }
+    return { all, add, edit, remove, detail }
 }
 
 export const useCrud = () => {
@@ -17,6 +19,7 @@ export const useCrud = () => {
         fetchCategory: crud("categories"),
         fetchAccount: crud("savings"),
         fetchTransaction: crud("transactions"),
-        fetchInstalment: crud("instalments")
+        fetchInstalment: crud("instalments"),
+        fetchSetting: crud("settings")
     }
 }

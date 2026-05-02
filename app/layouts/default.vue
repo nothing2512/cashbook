@@ -16,11 +16,9 @@ useHead({
         lang: 'en'
     },
     script: [
-        { src: "mazer/assets/static/js/components/dark.js" },
         { src: "mazer/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js" },
         { src: "mazer/assets/compiled/js/app.js" },
         { src: "mazer/assets/extensions/apexcharts/apexcharts.min.js" },
-        { src: "mazer/assets/static/js/pages/dashboard.js" },
         { src: "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" },
         { src: "mazer/assets/extensions/toastify-js/src/toastify.js" },
         { src: "mazer/assets/extensions/flatpickr/flatpickr.min.js" }
@@ -39,13 +37,13 @@ useSeoMeta({
     twitterCard: 'summary_large_image'
 })
 
-
-
 const pageTitle = ref('Dashboard')
 const loading = ref(false)
 const tab = ref("dashboard")
 const nowDateTime = ref('')
 const showData = ref(false)
+
+const { fetchSetting } = useCrud()
 
 const setLoading = (status) => {
     loading.value = status
@@ -91,11 +89,14 @@ onMounted(async () => {
         nowDateTime.value = `${dd} ${mm} ${yy} ${HH}:${ii}:${ss}`;
     }, 1000)
 
-    const theme = localStorage.getItem('theme')
-
-    if (theme)
-        document.documentElement.setAttribute('data-bs-theme', theme)
+    const { data } = await fetchSetting.detail(1)
+    showData.value = data[0].show_digit
 })
+
+const setShowData = async () => {
+    showData.value=!showData.value
+    await fetchSetting.edit({id: 1, show_digit: showData.value})
+}
 
 </script>
 
@@ -115,7 +116,7 @@ onMounted(async () => {
                 <div class="row">
                     <div class="col">
                         <h3 class="d-inline-block me-3 mb-0">{{ pageTitle }} </h3>
-                        <h4 @click="showData=!showData" class="d-inline-block mb-0" style="cursor: pointer;"><i class="bi" :class="showData ? 'bi-eye-fill' : 'bi-eye-slash-fill'"></i></h4>
+                        <h4 @click="setShowData" class="d-inline-block mb-0" style="cursor: pointer;"><i class="bi" :class="showData ? 'bi-eye-fill' : 'bi-eye-slash-fill'"></i></h4>
                     </div>
                     <div class="col">
                         <h4 class="text-end text-secondary mb-0">{{ nowDateTime }}</h4>

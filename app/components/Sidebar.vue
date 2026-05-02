@@ -2,16 +2,37 @@
 
 const { tab } = defineProps({
     tab: String,
-    active: Boolean
+    active: Boolean,
 })
 
 const logout = () => {
     document.cookie = `token=; path=/; max-age=0; samesite=strict`
     navigateTo("/login")
 }
+
+const { fetchSetting } = useCrud()
+
+const setting = ref()
+const showModal = ref(false)
+
+onMounted(async () => {
+    const { data } = await fetchSetting.detail(1)
+    setting.value = data[0]
+
+    document.documentElement.setAttribute('data-bs-theme', setting.value.theme)
+})
+
+const onSubmitModal = async (form) => await fetchSetting.edit(form)
+
+const onCloseModal = async () => {
+    showModal.value = false
+}
+
 </script>
 
 <template>
+    <SettingModal :data="setting" :on-close-modal="onCloseModal" :show="showModal" :on-submit="onSubmitModal" />
+
     <div id="sidebar" :class="active ? 'active' : ''">
         <div class="sidebar-wrapper active">
             <div class="sidebar-header position-relative">
@@ -56,6 +77,14 @@ const logout = () => {
             </div>
             <div class="sidebar-menu">
                 <ul class="menu">
+
+                    <li class="sidebar-item" :class="tab == 'accounts' ? 'active' : ''">
+                        <a href="#" class='sidebar-link' @click.prevent="() => showModal=true">
+                            <span>Settings</span>
+                        </a>
+                    </li>
+
+                    <hr>
 
                     <li class="sidebar-item" :class="tab == 'dashboard' ? 'active' : ''">
                         <NuxtLink href="/" class='sidebar-link' @click="setTab('dashboard')">
