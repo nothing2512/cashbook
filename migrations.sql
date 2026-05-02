@@ -312,10 +312,10 @@ CREATE OR REPLACE VIEW instalment_views AS
 SELECT 
     i.month,
     i.year,
+    i.paid,
     SUM(i.amount)
 FROM instalment_items i
-WHERE i.paid = false
-GROUP BY i.month, i.year;
+GROUP BY i.month, i.year, i.paid;
 
 ALTER VIEW instalment_views SET (security_invoker = true);
 GRANT SELECT ON instalment_views TO authenticated;

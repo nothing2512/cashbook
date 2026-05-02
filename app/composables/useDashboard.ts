@@ -40,6 +40,20 @@ export const useDashboard = () => {
 
     const fetchMonthlyExpenesDebt = async () => await fetchMonthlyList("monthly_debt", "expenses")
 
+    const fetchCurrentInstalment = async () => {
+        const now = new Date()
+        const { data }: any = await fetchSupabaseList("GET", `/instalment_views?month=eq.${now.getMonth()+1}&year=eq.${now.getFullYear()}`, 1, 1)
+        if (data.length == 0) return 0
+        return data[0].sum
+    }
+
+    const fetchUnpaidCurrentInstalment = async () => {
+        const now = new Date()
+        const { data }: any = await fetchSupabaseList("GET", `/instalment_views?paid=eq.false&month=eq.${now.getMonth()+1}&year=eq.${now.getFullYear()}`, 1, 1)
+        if (data.length == 0) return 0
+        return data[0].sum
+    }
+
     const fetchUpiadDebts = async () => {
         const response: any = await fetchSupabaseList("GET", "/debt_views", 1, 2)
         let debt = 0
@@ -51,5 +65,5 @@ export const useDashboard = () => {
         return {debt, receivables}
     }
 
-    return { fetchDashboard: { fetchMonthlyIncome, fetchMonthlyExpenes, fetchMonthlyIncomeDebt, fetchMonthlyExpenesDebt, fetchUpiadDebts } }
+    return { fetchDashboard: { fetchMonthlyIncome, fetchMonthlyExpenes, fetchMonthlyIncomeDebt, fetchMonthlyExpenesDebt, fetchCurrentInstalment, fetchUpiadDebts, fetchUnpaidCurrentInstalment } }
 }
