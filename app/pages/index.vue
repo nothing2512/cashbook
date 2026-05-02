@@ -111,29 +111,29 @@ onMounted(async () => {
                 <CardStat title="Total uang jangka panjang" :value="rupiah(longTermMoney, showData)" :color="'red'"
                     :icon="'iconly-boldTicket'" />
                 <CardStat title="Pemasukan bulan ini" :value="rupiah(income, showData)" :color="'purple'"
-                    :icon="'iconly-boldActivity'" />
+                    :icon="'iconly-boldActivity'" bg="success" />
                 <CardStat title="Pengeluaran bulan ini" :value="rupiah(expenses, showData)" :color="'blue'"
-                    :icon="'iconly-boldBuy'" />
+                    :icon="'iconly-boldBuy'" bg="secondary" />
             </div>
             <div class="row">
                 <CardStat title="Tagihan bulan ini" :value="rupiah(unpaidCurrentInstalment, showData)" :color="'blue'"
-                    :icon="'iconly-boldWallet'" />
+                    :icon="'iconly-boldWallet'" :bg="unpaidCurrentInstalment > 0 ? 'danger' : ''" />
                 <CardStat title="Total hutang tersisa" :value="rupiah(debt, showData)" :color="'black'"
-                    :icon="'iconly-boldPaper'" />
+                    :icon="'iconly-boldPaper'" :bg="debt > 0 ? 'danger': 'success'" />
                 <CardStat title="Total piutang tersisa" :value="rupiah(receivables, showData)" :color="'red'"
-                    :icon="'iconly-boldFolder'" />
+                    :icon="'iconly-boldFolder'" bg="success" />
                 <CardStat title="Anggaran tiap bulan" :value="rupiah(budget, showData)" :color="'green'"
                     :icon="'iconly-boldDiscount'" />
             </div>
             <div class="row">
                 <CardStat title="Total cicilan tersisa" :value="rupiah(instalment, showData)" :color="'green'"
-                    :icon="'iconly-boldBag-2'" />
+                    :icon="'iconly-boldBag-2'" :bg="instalment > 0 ? 'danger' : ''" />
                 <CardStat title="Sisa bulan cicilan" :value="`${totalInstalment} Bulan`" :color="'red'"
-                    :icon="'iconly-boldTicket'" />
+                    :icon="'iconly-boldTicket'" :bg="totalInstalment > 0 ? 'danger': ''" />
                 <CardStat title="Hutang + cicilan" :value="rupiah(debt + instalment, showData)" :color="'purple'"
-                    :icon="'iconly-boldActivity'" />
+                    :icon="'iconly-boldActivity'" :bg="debt + instalment > 0 ? 'danger': ''" />
                 <CardStat title="Gaji - cicilan - anggaran" :value="rupiah(salary - currentInstalment - budget, showData)" :color="'blue'"
-                    :icon="'iconly-boldBuy'" />
+                    :icon="'iconly-boldBuy'" :bg="salary - currentInstalment - budget < 0 ? 'danger': ''" />
             </div>
         </div>
         <div class="col-12 col-lg-9">
