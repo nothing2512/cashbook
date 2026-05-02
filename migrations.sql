@@ -272,3 +272,116 @@ GROUP BY
 
 ALTER VIEW debt_views SET (security_invoker = true);
 GRANT SELECT ON debt_views TO authenticated;
+
+CREATE TABLE instalments (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name VARCHAR(30) NOT NULL,
+    startmonth INT NOT NULL,
+    startyear INT NOT NULL,
+    totalmonth INT NOT NULL,
+    monthlypaid NUMERIC(15, 2) NOT NULL,
+    paid BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE instalment_items (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    instalment_id BIGINT NOT NULL,
+    amount NUMERIC(15, 2) NOT NULL,
+    "month" INT NOT NULL,
+    "year" INT NOT NULL,
+    paid BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT fk_instalment_items
+        FOREIGN KEY (instalment_id)
+        REFERENCES instalments(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+alter table instalments enable row level security;
+create policy "instalments policy" on instalments for all to authenticated using ( true );
+
+alter table instalment_items enable row level security;
+create policy "instalment_items policy" on instalment_items for all to authenticated using ( true );
+
+CREATE OR REPLACE VIEW instalment_views AS
+SELECT 
+    i.month,
+    i.year,
+    SUM(i.amount)
+FROM instalment_items i
+WHERE i.paid = false
+GROUP BY i.month, i.year;
+
+ALTER VIEW instalment_views SET (security_invoker = true);
+GRANT SELECT ON instalment_views TO authenticated;
+
+CREATE OR REPLACE FUNCTION trg_instalments_after_insert()
+RETURNS TRIGGER AS $$
+DECLARE
+    i INT;
+    calc_month INT;
+    calc_year INT;
+BEGIN
+    FOR i IN 0..(NEW.totalMonth - 1) LOOP
+        calc_month := ((NEW.startMonth - 1 + i) % 12) + 1;
+        calc_year := NEW.startYear + ((NEW.startMonth - 1 + i) / 12);
+
+        INSERT INTO instalment_items (
+            instalment_id,
+            amount,
+            "month",
+            "year"
+        ) VALUES (
+            NEW.id,
+            NEW.monthlypaid, -- default amount, adjust if needed
+            calc_month,
+            calc_year
+        );
+    END LOOP;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION trg_instalments_after_delete()
+RETURNS TRIGGER AS $$
+BEGIN
+    DELETE FROM instalment_items
+    WHERE instalment_id = OLD.id;
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+-- AFTER INSERT
+CREATE TRIGGER trg_instalments_ai
+AFTER INSERT ON instalments
+FOR EACH ROW
+EXECUTE FUNCTION trg_instalments_after_insert();
+
+-- AFTER DELETE
+CREATE TRIGGER trg_instalments_ad
+AFTER DELETE ON instalments
+FOR EACH ROW
+EXECUTE FUNCTION trg_instalments_after_delete();
+
+CREATE OR REPLACE FUNCTION trg_instalments_items_after_updated()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE instalments
+    SET paid = true
+    WHERE id NOT IN (SELECT instalment_id FROM instalment_items WHERE paid = false);
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_instalments_items_update
+AFTER UPDATE ON instalment_items
+FOR EACH ROW
+EXECUTE FUNCTION trg_instalments_items_after_updated();

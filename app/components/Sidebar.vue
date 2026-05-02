@@ -92,6 +92,13 @@ const logout = () => {
                         </NuxtLink>
                     </li>
 
+                    <li class="sidebar-item" :class="tab == 'instalment' ? 'active' : ''">
+                        <NuxtLink href="/instalment" class='sidebar-link' @click="setTab('instalment')">
+                            <i class="bi bi-stack-overflow"></i>
+                            <span>Cicilan</span>
+                        </NuxtLink>
+                    </li>
+
                     <hr>
 
                     <li class="sidebar-item" :class="tab == 'categories' ? 'active' : ''">

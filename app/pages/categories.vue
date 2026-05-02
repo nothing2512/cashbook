@@ -7,7 +7,8 @@ const { fetchCategory } = useCrud()
 
 const props = defineProps({
     setLoading: Function,
-    setTab: Function
+    setTab: Function,
+    showData: Boolean
 })
 
 props.setTab("categories")

@@ -7,6 +7,8 @@ export const useTransaction = () => {
 
     const settlements = async (id: number, page: number, pageSize:number=10) => fetchSupabaseList("GET", `/transactions?select=*,savings(name),categories(name)&order=transaction_date.desc&parent_id=eq.${id}`, page, pageSize)
 
+    const instalments = async (page: number, pageSize:number=10) => fetchSupabaseList("GET", `/instalments?paid=eq.false&order=id.asc`, page, pageSize)
+
     const detail = async (id: number) => fetchSupabaseList("GET", `/transactions?id=eq.${id}`, 1, 1)
 
     const debts = async (page: number, paidOff: string, pageSize:number=10) => {
@@ -51,5 +53,9 @@ export const useTransaction = () => {
         }
     }
 
-    return { fetchTransaction: { add, edit, remove, incomes, expenses, debts, receivables, settlements, detail } }
+    const payInstalment = async (month: number, year: number) => fetchSupabase("PATCH", `/instalment_items?month=eq.${month}&year=eq.${year}`, {paid: true})
+
+    const monthlyInstalments = async (page: number, pageSize:number=10) => fetchSupabaseList("GET", `/instalment_views?order=year.asc&order=month.asc`, page, pageSize)
+
+    return { fetchTransaction: { add, edit, remove, incomes, expenses, debts, receivables, settlements, detail, monthlyInstalments, payInstalment, instalments } }
 }

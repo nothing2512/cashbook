@@ -11,7 +11,8 @@ const { fetchTransaction } = useTransaction()
 
 const props = defineProps({
     setLoading: Function,
-    setTab: Function
+    setTab: Function,
+    showData: Boolean
 })
 
 props.setTab("debts")
@@ -182,11 +183,11 @@ const removeData = async (data) => {
                                         <tr v-for="(transaction, idx) in transactions">
                                             <td>{{ idx + 1 }}</td>
                                             <td>{{ transaction.title }}</td>
-                                            <td>{{ rupiah(transaction.amount) }}</td>
+                                            <td>{{ rupiah(transaction.amount, props.showData) }}</td>
                                             <td>
                                                 <span class="badge" :class="transaction.paid_off ? 'bg-success' : 'bg-danger'" >{{ transaction.paid_off ? 'Lunas' : 'Belum Lunas' }}</span>
                                                 <br>
-                                                <span class="badge bg-info" v-if="!transaction.paid_off">- {{ rupiah(transaction.amount - transaction.child_amount) }}</span>
+                                                <span class="badge bg-info" v-if="!transaction.paid_off">- {{ rupiah(transaction.amount - transaction.child_amount, props.showData) }}</span>
                                             </td>
                                             <td><span class="badge bg-primary">{{ transaction.categories.name }}</span>
                                             </td>

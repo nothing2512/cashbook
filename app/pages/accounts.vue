@@ -9,7 +9,8 @@ const { fetchAccount } = useCrud()
 
 const props = defineProps({
     setLoading: Function,
-    setTab: Function
+    setTab: Function,
+    showData: Boolean
 })
 
 props.setTab("accounts")
@@ -143,7 +144,7 @@ const removeData = async (data) => {
                                             <td>{{ idx + 1 }}</td>
                                             <td>{{ account.name }}</td>
                                             <td>{{ account.num ? account.num : '-' }}</td>
-                                            <td>{{ rupiah(account.amount) }}</td>
+                                            <td>{{ rupiah(account.amount, props.showData) }}</td>
                                             <td>
                                                 <div class="buttons">
                                                     <button href="#" class="btn icon btn-primary"

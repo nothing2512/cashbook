@@ -60,6 +60,7 @@ const setTab = (value) => {
     if (value == "expenses") pageTitle.value = "Pengeluaran"
     if (value == "incomes") pageTitle.value = "Pemasukan"
     if (value == "receivables") pageTitle.value = "Piutang"
+    if (value == "instalment") pageTitle.value = "Cicilan"
     closeSidebar()
 }
 
@@ -102,7 +103,7 @@ onMounted(async () => {
     <div class="sidebar-backdrop" v-if="isSidebar" @click="closeSidebar"></div>
     <div id="app">
         <Loading :loading="loading" />
-        <Sidebar :tab="tab" :active="isSidebar" />
+        <Sidebar :tab="tab" :active="isSidebar" :showData="showData" />
         <div id="main">
             <header class="mb-3">
                 <a href="#" class="burger-btn d-block d-xl-none" @click.prevent="openSidebar">

@@ -29,7 +29,7 @@ let modal = null
 let fp = null
 
 onMounted(() => {
-    const el = document.getElementById("savingModal")
+    const el = document.getElementById("transactionModal")
     modal = new bootstrap.Modal(el)
     el.addEventListener('hidden.bs.modal', () => {
         props.onCloseModal()
@@ -97,7 +97,7 @@ const onSubmit = () => {
 
 <template>
     <Teleport to="body">
-        <div class="modal fade text-left" id="savingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33"
+        <div class="modal fade text-left" id="transactionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -113,7 +113,7 @@ const onSubmit = () => {
                             <div class="form-group mandatory">
                                 <label class="form-label" for="account">Akun Penyimpanan </label>
                                 <select class="form-select" id="account" v-model="form.saving_id">
-                                    <option v-for="saving in savings" :value="saving.id">{{ saving.name }}</option>
+                                    <option v-for="saving in savings" :value="saving.id">{{ saving.name }}  ( {{ rupiah(saving.amount, true) }} ) </option>
                                 </select>
                             </div>
                             <div class="form-group mandatory">

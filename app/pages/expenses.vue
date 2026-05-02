@@ -11,7 +11,8 @@ const { fetchTransaction } = useTransaction()
 
 const props = defineProps({
     setLoading: Function,
-    setTab: Function
+    setTab: Function,
+    showData: Boolean
 })
 
 props.setTab("expenses")
@@ -169,7 +170,7 @@ const removeData = async (data) => {
                                         <tr v-for="(transaction, idx) in transactions">
                                             <td>{{ idx + 1 }}</td>
                                             <td>{{ transaction.title }}</td>
-                                            <td>{{ rupiah(transaction.amount) }}</td>
+                                            <td>{{ rupiah(transaction.amount, props.showData) }}</td>
                                             <td><span class="badge bg-primary">{{ transaction.categories.name }}</span></td>
                                             <td><span class="badge bg-info">{{ transaction.savings.name }}</span></td>
                                             <td>{{ transaction.transaction_date }}</td>
