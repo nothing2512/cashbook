@@ -181,10 +181,10 @@ const onCloseModal = async () => {
                     </li>
 
                     <li class="sidebar-item">
-                        <NuxtLink href="/login" class='sidebar-link' @click="logout">
+                        <a href="#" class='sidebar-link' @click.prevent="logout">
                             <i class="bi bi-box-arrow-right"></i>
                             <span>Logout</span>
-                        </NuxtLink>
+                        </a>
                     </li>
 
                 </ul>
