@@ -7,6 +7,7 @@ const { tab } = defineProps({
 
 const logout = () => {
     document.cookie = `token=; path=/; max-age=0; samesite=strict`
+    document.cookie = `refreshToken=; path=/; max-age=0; samesite=strict`
     navigateTo("/login")
 }
 

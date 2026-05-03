@@ -133,8 +133,28 @@ export const useApi = () => {
         }
     }
 
+    const fetchRefreshToken = async (refresh_token: string) => {
+        try {
+            const response = await $fetch.raw("/auth/v1/token?grant_type=refresh_token", {
+                method: "POST",
+                baseURL: config.public.supabaseUrl!.split("/rest/v1")[0],
+                body: { refresh_token },
+                headers: {
+                    "apikey": config.public.supabaseApiKey
+                },
+            })
+            return {
+                data: response._data,
+                headers: response.headers
+            }
+        } catch (err: any) {
+            throw err.response._data
+        }
+    }
+
     return {
         fetchLogin,
+        fetchRefreshToken,
         fetchSupabase,
         fetchSupabaseList
     }

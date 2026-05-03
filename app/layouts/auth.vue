@@ -34,11 +34,6 @@ useSeoMeta({
     twitterCard: 'summary_large_image'
 })
 
-const token = useCookie('token')
-if (token.value != null) {
-    navigateTo('/')
-}
-
 const loading = ref(false)
 
 const setLoading = (status) => {
