@@ -182,7 +182,7 @@ export function hasLimit(): Boolean {
 
     const tokenData = JSON.parse(atob(`${token.value.split(".")[1]}`))
     
-    if (config.public.productionEmail != tokenData.email) return true
+    if (config.public.superadminEmail != tokenData.email) return true
     
     return false
 }

@@ -30,7 +30,7 @@ export default defineNuxtConfig({
     public: {
       supabaseUrl: process.env.SUPABASE_URL,
       supabaseApiKey: process.env.SUPABASE_API_KEY,
-      productionEmail: process.env.PRODUCTION_EMAIL,
+      superadminEmail: process.env.SUPERADMIN_EMAIL,
     }
   }
 })
