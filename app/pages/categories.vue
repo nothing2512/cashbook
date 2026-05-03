@@ -144,7 +144,7 @@ const removeData = async (data) => {
                                                         @click="setModal('update', category)">
                                                         <i class="bi bi-pencil"></i>
                                                     </button>
-                                                    <button href="#" class="btn icon btn-danger" v-if="category.id != 1"
+                                                    <button href="#" class="btn icon btn-danger" v-if="idx != 0"
                                                         @click="removeData(category)">
                                                         <i class="bi bi-x"></i>
                                                     </button>

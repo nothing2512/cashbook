@@ -133,6 +133,26 @@ export const useApi = () => {
         }
     }
 
+    const fetchLogout = async () => {
+        const token = useCookie('token')
+        try {
+            const response = await $fetch.raw("/auth/v1/logout", {
+                method: "POST",
+                baseURL: config.public.supabaseUrl!.split("/rest/v1")[0],
+                headers: {
+                    "apikey": config.public.supabaseApiKey,
+                    "Authorization": `Bearer ${token.value}`,
+                },
+            })
+            return {
+                data: response._data,
+                headers: response.headers
+            }
+        } catch (err: any) {
+            throw err.response._data
+        }
+    }
+
     const fetchRefreshToken = async (refresh_token: string) => {
         try {
             const response = await $fetch.raw("/auth/v1/token?grant_type=refresh_token", {
@@ -155,6 +175,7 @@ export const useApi = () => {
     return {
         fetchLogin,
         fetchRefreshToken,
+        fetchLogout,
         fetchSupabase,
         fetchSupabaseList
     }

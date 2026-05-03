@@ -486,3 +486,45 @@ CREATE TABLE budgets (
 
 alter table budgets enable row level security;
 create policy "budgets policy" on budgets for all to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+ALTER TABLE budgets
+ADD CONSTRAINT fk_user
+FOREIGN KEY (user_id)
+REFERENCES auth.users(id)
+ON DELETE CASCADE;
+
+ALTER TABLE categories
+ADD CONSTRAINT fk_user
+FOREIGN KEY (user_id)
+REFERENCES auth.users(id)
+ON DELETE CASCADE;
+
+ALTER TABLE instalment_items
+ADD CONSTRAINT fk_user
+FOREIGN KEY (user_id)
+REFERENCES auth.users(id)
+ON DELETE CASCADE;
+
+ALTER TABLE instalments
+ADD CONSTRAINT fk_user
+FOREIGN KEY (user_id)
+REFERENCES auth.users(id)
+ON DELETE CASCADE;
+
+ALTER TABLE savings
+ADD CONSTRAINT fk_user
+FOREIGN KEY (user_id)
+REFERENCES auth.users(id)
+ON DELETE CASCADE;
+
+ALTER TABLE settings
+ADD CONSTRAINT fk_user
+FOREIGN KEY (user_id)
+REFERENCES auth.users(id)
+ON DELETE CASCADE;
+
+ALTER TABLE transactions
+ADD CONSTRAINT fk_user
+FOREIGN KEY (user_id)
+REFERENCES auth.users(id)
+ON DELETE CASCADE;

@@ -5,18 +5,20 @@ const { tab } = defineProps({
     active: Boolean,
 })
 
-const logout = () => {
-    document.cookie = `token=; path=/; max-age=0; samesite=strict`
-    document.cookie = `refreshToken=; path=/; max-age=0; samesite=strict`
-    navigateTo("/login")
-}
-
 const { fetchSetting, fetchAccount, fetchCategory } = useCrud()
+const { fetchLogout } = useApi()
 
 const setting = ref()
 const showModal = ref(false)
 const accounts = ref()
 const categories = ref()
+
+const logout = async () => {
+    await fetchLogout()
+    document.cookie = `token=; path=/; max-age=0; samesite=strict`
+    document.cookie = `refreshToken=; path=/; max-age=0; samesite=strict`
+    navigateTo("/login")
+}
 
 onMounted(async () => {
     await getData()

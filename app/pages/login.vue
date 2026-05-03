@@ -4,6 +4,7 @@ import { useApi } from '~/composables/useApi';
 import Swal from 'sweetalert2';
 
 const { fetchLogin, fetchRefreshToken } = useApi()
+const { fetchAccount, fetchCategory, fetchSetting } = useCrud()
 
 definePageMeta({
     layout: 'auth'
@@ -57,10 +58,31 @@ onBeforeMount(async () => {
 const login = async () => {
     setLoading(true)
     try {
-        const { data } = await fetchLogin(email.value, password.value)
+        let { data } = await fetchLogin(email.value, password.value)
         setLoading(false)
         document.cookie = `token=${data.access_token}; path=/; max-age=${data.expires_in}; samesite=strict`
         if (rememberMe.value) document.cookie = `refreshToken=${data.refresh_token}; path=/; samesite=strict`
+
+        let response = await fetchSetting.all(1, 1)
+        data = response.data
+        if (data.length == 0) {
+            await fetchSetting.add({
+                salary: 0,
+                payday: 0,
+                show_digit: false,
+                theme: 'dark',
+                auto_add_salary: false
+            })
+
+            await fetchAccount.add({
+                name: 'Cash',
+                num: '',
+                amount: 0
+            })
+
+            await fetchCategory.add({name: 'default'})
+        }
+
         navigateTo('/')
     } catch (e) {
         setLoading(false)
