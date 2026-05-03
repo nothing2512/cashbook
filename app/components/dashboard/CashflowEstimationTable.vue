@@ -32,7 +32,7 @@ const reloadTable = () => {
     let newData = [];
     for (const idx in props.instalments) {
         const i = props.instalments[idx]
-        newData.push([idx + 1, `${bulan[i.month]} ${i.year}`, rupiah(props.salary - i.sum - props.budget, props.showData)])
+        newData.push([parseInt(idx) + 1, `${bulan[i.month]} ${i.year}`, rupiah(props.salary - i.sum - props.budget, props.showData)])
     }
     dt.rows.add(newData)
     dt.draw()
