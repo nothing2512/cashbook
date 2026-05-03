@@ -17,7 +17,7 @@
 
 #### Steps 2 (Supabase) :
 - Create supabase account.
-- Create supabase authentication users. (note: please copy the user id for later) [see instruction here](https://chatgpt.com/share/69ee0a13-1f64-83a1-baa6-91deca2f455d)
+- Create supabase authentication users. [see instruction here](https://chatgpt.com/share/69ee0a13-1f64-83a1-baa6-91deca2f455d)
 - enable pg_cron in supabase. [see instruction here](https://chatgpt.com/share/69f5fb03-9ef8-8323-8490-49e5f0bbb80c)
 - migrate database in supabase from `migrations.sql` file. [see instruction here](https://chatgpt.com/share/69ee0b26-85bc-83a1-bb64-13fd53652bc9)
 
@@ -25,6 +25,7 @@
 - Create vercel account.
 - Find your supabase api keys in Supabase dashboard > Project Settings > API Keys -> Publishable Key (note: this key will be used as env `SUPABASE_API_KEY`)
 - Find your supabase url in Supabase dashboard > Project Overview > Copy > Copy Project URL (note: this url will be used as env `SUPABASE_URL` with format `<your-supabase-project-url>/rest/v1`)
+- add env `SUPERADMIN_EMAIL` , fill with main authentication users from supabase. note: other authentication email other than superadmin will only can add 5 data only per menu.
 - Deploy your apps into vercel account. [see instruction here](https://chatgpt.com/share/69ee0e69-fd4c-8322-ac8d-7e0c01b204f4)
 
 

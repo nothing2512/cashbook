@@ -70,6 +70,14 @@ const onModalSubmit = async (data) => {
 }
 
 const addData = async (data) => {
+    if (hasLimit() && accounts.value.length >= 5) {
+        return await Swal.fire({
+            title: `Akses dibatasi`,
+            text: "Akun demo hanya dapat memiliki maksimal 5 akun penyimpanan",
+            icon: "danger",
+            confirmButtonText: 'OK'
+        })
+    }
     props.setLoading(true)
     try {
         await fetchAccount.add(data)
@@ -142,7 +150,8 @@ const removeData = async (data) => {
                                     <tbody>
                                         <tr v-for="(account, idx) in accounts">
                                             <td>{{ idx + 1 }}</td>
-                                            <td>{{ account.name }} &nbsp; <span class="badge bg-primary" v-if="account.long_term">Jangka panjang</span></td>
+                                            <td>{{ account.name }} &nbsp; <span class="badge bg-primary"
+                                                    v-if="account.long_term">Jangka panjang</span></td>
                                             <td>{{ account.num ? account.num : '-' }}</td>
                                             <td>{{ rupiah(account.amount, props.showData) }}</td>
                                             <td>

@@ -104,6 +104,15 @@ const setDefault = (data) => {
 }
 
 const addData = async (data) => {
+    if (hasLimit() && transactions.value.length >= 5) {
+        return await Swal.fire({
+            title: `Akses dibatasi`,
+            text: "Akun demo hanya dapat memiliki maksimal 5 pelunasan piutang",
+            icon: "danger",
+            confirmButtonText: 'OK'
+        })
+    }
+
     props.setLoading(true)
     try {
         await fetchTransaction.add(setDefault(data))

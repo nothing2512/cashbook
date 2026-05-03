@@ -174,3 +174,15 @@ export function formatIndonesianDate(date: Date | string | number): string {
 
   return `${day} ${month} ${year} ${hour}:${minute}:${second}`
 }
+
+export function hasLimit(): Boolean {
+    const config = useRuntimeConfig()
+    const token = useCookie('token')
+    if (!token.value) return false
+
+    const tokenData = JSON.parse(atob(`${token.value.split(".")[1]}`))
+    
+    if (config.public.productionEmail != tokenData.email) return true
+    
+    return false
+}
