@@ -6,7 +6,7 @@ import Pagination from '~/components/Pagination.vue';
 import { rupiah } from '~/composables/utils';
 import TransactionModal from '~/components/transaction/TransactionModal.vue';
 
-const { fetchAccount, fetchCategory } = useCrud()
+const { fetchAccount, fetchCategory, fetchBudget } = useCrud()
 const { fetchTransaction } = useTransaction()
 
 const props = defineProps({
@@ -25,6 +25,7 @@ const totalData = ref(0)
 const totalPage = ref(1)
 const showModal = ref(false)
 const modalData = ref()
+const budgets = ref([])
 
 let modalState = 'add'
 
@@ -46,6 +47,9 @@ const getFullData = async () => {
 
         response = await fetchCategory.all(1, 999)
         categories.value = response.data
+
+        response = await fetchBudget.all(1, 999)
+        budgets.value = response.data
 
         await getData()
 
@@ -142,7 +146,7 @@ const removeData = async (data) => {
 <template>
     <section class="section">
         <div class="row" id="basic-table">
-            <TransactionModal :show="showModal" :on-close-modal="onCloseModal" :on-submit="onModalSubmit" :data="modalData" :categories="categories" :savings="accounts" expenses="true" />
+            <TransactionModal :show="showModal" :on-close-modal="onCloseModal" :on-submit="onModalSubmit" :data="modalData" :categories="categories" :savings="accounts" :budgets="budgets" expenses="true" />
             <div class="col-12 col-md-12">
                 <div class="card">
                     <div class="card-content">

@@ -7,7 +7,9 @@ var props = defineProps({
     data: Object,
     categories: Array,
     savings: Array,
+    budgets: Array,
     expenses: Boolean,
+    debt: Boolean,
 })
 
 const expenses = props.expenses || false
@@ -15,6 +17,7 @@ const expenses = props.expenses || false
 let form = reactive({
     id: props.data?.id || 0,
     parent_id: props.data?.parent_id,
+    budget_id: props.data?.budget_id || 0,
     saving_id: props.data?.saving_id,
     category_id: props.data?.category_id,
     title: props.data?.title,
@@ -52,6 +55,7 @@ watch(() => props.show, (newVal, oldVal) => {
             id: props.data?.id || 0,
             parent_id: props.data?.parent_id,
             saving_id: props.data?.saving_id || 1,
+            budget_id: props.data?.budget_id || 0,
             category_id: props.data?.category_id || 1,
             title: props.data?.title || '',
             description: props.data?.description || '',
@@ -65,6 +69,12 @@ watch(() => props.show, (newVal, oldVal) => {
         modal.show()
     }
 })
+
+const onBudgetChanged = () => {
+    for (let budget of props.budgets) {
+        if (budget.id == form.budget_id) form.category_id = budget.category_id
+    }
+}
 
 const toast = (message) => {
     Toastify({
@@ -87,6 +97,7 @@ const onSubmit = () => {
             }
         }
     }
+    if (!form.budget_id) form.budget_id = null;
 
     modal.hide()
     props.onSubmit(form)
@@ -96,8 +107,8 @@ const onSubmit = () => {
 
 <template>
     <Teleport to="body">
-        <div class="modal fade text-left" id="transactionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33"
-            aria-hidden="true">
+        <div class="modal fade text-left" id="transactionModal" tabindex="-1" role="dialog"
+            aria-labelledby="myModalLabel33" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -112,12 +123,24 @@ const onSubmit = () => {
                             <div class="form-group mandatory">
                                 <label class="form-label" for="account">Akun Penyimpanan </label>
                                 <select class="form-select" id="account" v-model="form.saving_id">
-                                    <option v-for="saving in savings" :value="saving.id">{{ saving.name }}  ( {{ rupiah(saving.amount, true) }} ) </option>
+                                    <option v-for="saving in savings" :value="saving.id">{{ saving.name }} ( {{
+                                        rupiah(saving.amount, true) }} ) </option>
+                                </select>
+                            </div>
+                            <div class="form-group" v-if="!debt && expenses">
+                                <label class="form-label" for="budget">Anggaran </label>
+                                <select class="form-select" id="budget" v-model="form.budget_id"
+                                    @change="onBudgetChanged">
+                                    <option value="0">-</option>
+                                    <option v-for="budget in budgets" :value="budget.id">{{ budget.title }} {{
+                                        rupiah(budget.amount, true) }}
+                                    </option>
                                 </select>
                             </div>
                             <div class="form-group mandatory">
                                 <label class="form-label" for="category">Kategori </label>
-                                <select class="form-select" id="account" v-model="form.category_id">
+                                <select class="form-select" id="category" v-model="form.category_id"
+                                    :disabled="form.budget_id != 0">
                                     <option v-for="category in categories" :value="category.id">{{ category.name }}
                                     </option>
                                 </select>

@@ -146,7 +146,7 @@ const removeData = async (data) => {
     <section class="section">
         <div class="row" id="basic-table">
             <TransactionModal :show="showModal" :on-close-modal="onCloseModal" :on-submit="onModalSubmit"
-                :data="modalData" :categories="categories" :savings="accounts" expenses="true" />
+                :data="modalData" :categories="categories" :savings="accounts" expenses="true" debt="true" />
             <div class="col-12 col-md-12">
                 <div class="card">
                     <div class="card-content">

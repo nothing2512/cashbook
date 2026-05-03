@@ -1,10 +1,11 @@
 <script setup>
 import Swal from 'sweetalert2';
 import CardStat from '~/components/dashboard/CardStat.vue';
-import CashflowEstimation from '~/components/dashboard/CashflowEstimation.vue';
+import CashflowEstimationTable from '~/components/dashboard/CashflowEstimationTable.vue';
 import CurrentMonthFinanceChart from '~/components/dashboard/CurrentMonthFinanceChart.vue';
 import FinancialHealthChart from '~/components/dashboard/FinancialHealthChart.vue';
 import MonthlyReportChart from '~/components/dashboard/MonthlyReportChart.vue';
+import OverBudgetTable from '~/components/dashboard/OverBudgetTable.vue';
 
 const income = ref(0)
 const expenses = ref(0)
@@ -25,6 +26,7 @@ const salary = ref(0)
 const budget = ref(0)
 const payday = ref(0)
 const instalments = ref([])
+const overBudgets = ref([])
 
 const props = defineProps({
     setTab: Function,
@@ -37,6 +39,7 @@ props.setTab("dashboard")
 const { fetchDashboard } = useDashboard()
 const { fetchAccount, fetchSetting, fetchBudget } = useCrud()
 const { fetchTransaction } = useTransaction()
+const { fetchOverBudget } = useRpc()
 
 const showErr = (e) => {
     props.setLoading(false)
@@ -100,6 +103,9 @@ onMounted(async () => {
         }
         totalInstalment.value = response.totalData
 
+        response = await fetchOverBudget(1, 999)
+        overBudgets.value = response.data
+
         loaded.value = true
         props.setLoading(false)
     } catch (e) {
@@ -147,6 +153,7 @@ onMounted(async () => {
             <div class="row">
                 <MonthlyReportChart id="main-financial" title="Grafik laporan keuangan" :loaded="loaded"
                     :incomes="incomeList" :expenses="expensesList" :show-data="showData" />
+                <OverBudgetTable :over-budgets="overBudgets" :show-data="showData" />
                 <MonthlyReportChart id="debt-financial" title="Grafik laporan hutang" :loaded="loaded"
                     :incomes="debtList" :expenses="receivablesList" income-text="Hutang" expenses-text="Piutang"
                     :show-data="showData" />
@@ -158,7 +165,7 @@ onMounted(async () => {
                 :loaded="loaded" :showData="showData" />
             <CurrentMonthFinanceChart :income="income" :saving="shortTermMoney" :expenses="expenses" :loaded="loaded"
                 :show-data="showData" />
-            <CashflowEstimation :instalments="instalments" :salary="salary" :budget="budget" :show-data="showData" />
+            <CashflowEstimationTable :instalments="instalments" :salary="salary" :budget="budget" :show-data="showData" />
         </div>
         <div class="col-12 col-lg-9">
         </div>

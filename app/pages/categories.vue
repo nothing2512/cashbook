@@ -2,9 +2,10 @@
 import { useCrud } from '~/composables/useCrud';
 import Swal from 'sweetalert2';
 import Pagination from '~/components/Pagination.vue';
+import { useRpc } from '../composables/useRpc';
 
 const { fetchCategory } = useCrud()
-const { fetchAllCategories } = useCategory()
+const { fetchAllCategories } = useRpc()
 
 const props = defineProps({
     setLoading: Function,

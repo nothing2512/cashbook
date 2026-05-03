@@ -28,7 +28,7 @@ const bulan = ["--", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Ju
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-if="!instalments">
+                                <tr v-if="!instalments || instalments.length == 0">
                                     <td colspan="3" class="text-center">Tidak ada cicilan</td>
                                 </tr>
                                 <tr v-for="(i, idx) in instalments">

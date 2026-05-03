@@ -36,7 +36,8 @@ export const useTransaction = () => {
             status: data.status,
             transaction_date: data.transaction_date,
             parent_id: data.parent_id,
-            is_debt: data.is_debt
+            is_debt: data.is_debt,
+            budget_id: data.budget_id
         }
     }
 
