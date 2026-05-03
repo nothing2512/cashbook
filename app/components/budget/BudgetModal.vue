@@ -53,7 +53,7 @@ const toast = (message) => {
 const onSubmit = () => {
     if (form.name == '') return toast("Nama anggaran wajib diisi")
     if (!form.amount) return toast("Jumlah anggaran wajib diisi")
-    if (!form.amount <= 0) return toast("Jumlah anggaran tidak boleh kurang dari sama dengan 0")
+    if (form.amount <= 0) return toast("Jumlah anggaran tidak boleh kurang dari sama dengan 0")
     modal.hide()
     props.onSubmit(form)
 }

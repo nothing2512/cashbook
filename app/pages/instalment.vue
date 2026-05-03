@@ -125,7 +125,7 @@ const onCloseModal = () => {
 }
 
 const addData = async (data) => {
-    if (hasLimit() && transactions.value.length >= 5) {
+    if (hasLimit() && instalments.value.length >= 5) {
         return await Swal.fire({
             title: `Akses dibatasi`,
             text: "Akun demo hanya dapat memiliki maksimal 5 cicilan",
