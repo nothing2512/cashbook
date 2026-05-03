@@ -110,34 +110,34 @@ onMounted(async () => {
     <section class="row">
         <div class="col-12">
             <div class="row">
-                <CardStat title="Total uang jangka pendek" :value="rupiah(shortTermMoney, showData)" :color="'green'"
+                <CardStat title="Uang panas" tooltip="Total uang yang bisa dipakai kapanpun, tidak untuk jangka panjang" :value="rupiah(shortTermMoney, showData)" :color="'green'"
                     :icon="'iconly-boldBag-2'" />
-                <CardStat title="Total uang jangka panjang" :value="rupiah(longTermMoney, showData)" :color="'red'"
+                <CardStat title="Uang dingin" tooltip="Total simpanan uang jangka panjang, bisa dipakai jika terdesak" :value="rupiah(longTermMoney, showData)" :color="'red'"
                     :icon="'iconly-boldTicket'" />
-                <CardStat title="Pemasukan bulan ini" :value="rupiah(income, showData)" :color="'purple'"
+                <CardStat title="Pemasukan" tooltip="Total pemasukan bulan ini tidak termasuk gaji pokok yang belum ditambahkan (hutang akan masuk sebagai pemasukan juga)" :value="rupiah(income, showData)" :color="'purple'"
                     :icon="'iconly-boldActivity'" bg="success" href="/incomes" />
-                <CardStat title="Pengeluaran bulan ini" :value="rupiah(expenses, showData)" :color="'blue'"
+                <CardStat title="Pengeluaran" tooltip="Total pengeluaran bulan ini, piutang juga termasuk sebagai pengeluaran juga" :value="rupiah(expenses, showData)" :color="'blue'"
                     :icon="'iconly-boldBuy'" bg="secondary" href="/expenses" />
             </div>
             <div class="row">
-                <CardStat title="Sisa tagihan bulan ini" :value="rupiah(unpaidCurrentInstalment, showData)"
+                <CardStat title="Tagihan" tooltip="Tagihan pada cicilan yang belum terbayarkan bulan ini" :value="rupiah(unpaidCurrentInstalment, showData)"
                     :color="'blue'" :icon="'iconly-boldWallet'" :bg="unpaidCurrentInstalment > 0 ? 'danger' : ''"
                     href="/instalment" />
-                <CardStat title="Total hutang tersisa" :value="rupiah(debt, showData)" :color="'black'"
+                <CardStat title="Hutang" tooltip="Sisa hutang yang belum dibayarkan hingga hari ini, tidak termasuk cicilan" :value="rupiah(debt, showData)" :color="'black'"
                     :icon="'iconly-boldPaper'" :bg="debt > 0 ? 'danger' : 'success'" href="/debts" />
-                <CardStat title="Total piutang tersisa" :value="rupiah(receivables, showData)" :color="'red'"
+                <CardStat title="Piutang" tooltip="Sisa piutang yang belum dibayarkan hingga hari ini" :value="rupiah(receivables, showData)" :color="'red'"
                     :icon="'iconly-boldFolder'" bg="success" href="/receivables" />
-                <CardStat title="Anggaran tiap bulan" :value="rupiah(budget, showData)" :color="'green'"
+                <CardStat title="Anggaran" tooltip="Jumlah anggaran / rencana pengeluaran bulanan " :value="rupiah(budget, showData)" :color="'green'"
                     :icon="'iconly-boldDiscount'" href="/budgets" />
             </div>
             <div class="row">
-                <CardStat title="Total cicilan tersisa" :value="rupiah(instalment, showData)" :color="'green'"
+                <CardStat title="Cicilan" tooltip="Jumlah seluruh cicilan yang belum terbayarkan" :value="rupiah(instalment, showData)" :color="'green'"
                     :icon="'iconly-boldBag-2'" :bg="instalment > 0 ? 'danger' : ''" href="/instalment" />
-                <CardStat title="Sisa bulan cicilan" :value="`${totalInstalment} Bulan`" :color="'red'"
+                <CardStat title="Bulan cicilan" tooltip="Jumlah bulan tagihan cicilan yang belum terbayarkan" :value="`${totalInstalment} Bulan`" :color="'red'"
                     :icon="'iconly-boldTicket'" :bg="totalInstalment > 0 ? 'danger' : ''" href="/instalment" />
-                <CardStat title="Hutang + cicilan" :value="rupiah(debt + instalment, showData)" :color="'purple'"
+                <CardStat title="Debtflow" tooltip="Jumlah hutang + cicilan yang belum dibayarkan" :value="rupiah(debt + instalment, showData)" :color="'purple'"
                     :icon="'iconly-boldActivity'" :bg="debt + instalment > 0 ? 'danger' : ''" />
-                <CardStat title="Gaji - cicilan - anggaran"
+                <CardStat title="Cashflow" tooltip="Jumlah uang sisa dari gaji pokok per bulan (gaji pokok - cicilan bulan ini - anggaran)"
                     :value="rupiah(salary - currentInstalment - budget, showData)" :color="'blue'"
                     :icon="'iconly-boldBuy'" :bg="salary - currentInstalment - budget < 0 ? 'danger' : ''" />
             </div>

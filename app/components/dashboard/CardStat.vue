@@ -7,6 +7,12 @@ const props = defineProps({
     color: String,
     bg: String,
     href: String,
+    tooltip: String,
+})
+
+const tooltipEl = ref(null)
+onMounted(() => {
+    if (props.tooltip) new bootstrap.Tooltip(tooltipEl.value)
 })
 
 </script>
@@ -16,8 +22,10 @@ const props = defineProps({
         <NuxtLink :href="href">
             <div class="card" :class="bg != undefined ? `bg-${bg}` : ''">
                 <div class="card-body px-4 py-4-5">
-                    
-                    <i v-if="href" class="bi bi-box-arrow-up-right position-absolute top-0 end-0 m-3"></i>
+                    <div class="position-absolute top-0 end-0 m-3">
+                        <i class="bi bi-question-circle" :title="tooltip" ref="tooltipEl" data-bs-placement="bottom"></i>
+                        <i v-if="href" class="bi bi-box-arrow-up-right ms-2"></i>
+                    </div>
 
                     <div class="row">
                         <div class="col-md-2 col-lg-12 col-xl-12 col-xxl-3 d-flex justify-content-start ">
