@@ -7,7 +7,6 @@ const props = defineProps({
 
 watch(() => props.loaded, (newVal, oldVal) => {
     if (!props.loaded) return;
-    console.log(props.value)
     const chartVisitorsProfile = new ApexCharts(
         document.getElementById("finance-health"),
         {
