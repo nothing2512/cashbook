@@ -564,7 +564,7 @@ FOREIGN KEY (budget_id)
 REFERENCES budgets(id)
 ON DELETE CASCADE;
 
-CREATE OR REPLACE FUNCTION over_budget(p_month INT, p_year INT)
+CREATE OR REPLACE FUNCTION monthly_budget(p_month INT, p_year INT)
 RETURNS TABLE (
     id BIGINT,
     title VARCHAR(50),
@@ -584,14 +584,13 @@ BEGIN
         COALESCE(SUM(t.amount), 0) AS expenses
     FROM budgets b
     JOIN categories c ON c.id = b.category_id
-    JOIN transactions t ON
+    LEFT JOIN transactions t ON
         t.budget_id = b.id
         AND t.is_debt = false
         AND t.kind = 'expenses'
         AND EXTRACT(MONTH FROM t.transaction_date) = p_month
         AND EXTRACT(YEAR FROM t.transaction_date) = p_year
     GROUP BY b.id, c.name
-    HAVING COALESCE(SUM(t.amount), 0) > b.amount
     ORDER BY b.id ASC;
 END;
 $$;

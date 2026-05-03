@@ -4,8 +4,8 @@ import CardStat from '~/components/dashboard/CardStat.vue';
 import CashflowEstimationTable from '~/components/dashboard/CashflowEstimationTable.vue';
 import CurrentMonthFinanceChart from '~/components/dashboard/CurrentMonthFinanceChart.vue';
 import FinancialHealthChart from '~/components/dashboard/FinancialHealthChart.vue';
+import MonthlyBudgetTable from '~/components/dashboard/MonthlyBudgetTable.vue';
 import MonthlyReportChart from '~/components/dashboard/MonthlyReportChart.vue';
-import OverBudgetTable from '~/components/dashboard/OverBudgetTable.vue';
 
 const income = ref(0)
 const expenses = ref(0)
@@ -27,6 +27,7 @@ const budget = ref(0)
 const payday = ref(0)
 const instalments = ref([])
 const overBudgets = ref([])
+const remainingBudgets = ref([])
 
 const props = defineProps({
     setTab: Function,
@@ -39,7 +40,7 @@ props.setTab("dashboard")
 const { fetchDashboard } = useDashboard()
 const { fetchAccount, fetchSetting, fetchBudget } = useCrud()
 const { fetchTransaction } = useTransaction()
-const { fetchOverBudget } = useRpc()
+const { fetchMonthlyBudget } = useRpc()
 
 const showErr = (e) => {
     props.setLoading(false)
@@ -91,11 +92,6 @@ onMounted(async () => {
             longTermMoney.value += data.amount
         }
 
-        response = await fetchBudget.all(1, 200)
-        for (const data of response.data) {
-            budget.value += data.amount
-        }
-
         response = await fetchTransaction.monthlyInstalments(1, 999)
         instalments.value = response.data
         for (const data of response.data) {
@@ -103,8 +99,12 @@ onMounted(async () => {
         }
         totalInstalment.value = response.totalData
 
-        response = await fetchOverBudget(1, 999)
-        overBudgets.value = response.data
+        response = await fetchMonthlyBudget(1, 999)
+        for (const data of response.data) {
+            if (data.amount < data.expenses) overBudgets.value.push(data)
+            else remainingBudgets.value.push(data)
+            budget.value += data.amount
+        }
 
         loaded.value = true
         props.setLoading(false)
@@ -153,7 +153,7 @@ onMounted(async () => {
             <div class="row">
                 <MonthlyReportChart id="main-financial" title="Grafik laporan keuangan" :loaded="loaded"
                     :incomes="incomeList" :expenses="expensesList" :show-data="showData" />
-                <OverBudgetTable :over-budgets="overBudgets" :show-data="showData" />
+                <MonthlyBudgetTable :over-budgets="overBudgets" :remaining-budgets="remainingBudgets" :show-data="showData" />
                 <MonthlyReportChart id="debt-financial" title="Grafik laporan hutang" :loaded="loaded"
                     :incomes="debtList" :expenses="receivablesList" income-text="Hutang" expenses-text="Piutang"
                     :show-data="showData" />
