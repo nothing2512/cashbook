@@ -165,7 +165,7 @@ onMounted(async () => {
                 :loaded="loaded" :showData="showData" />
             <CurrentMonthFinanceChart :income="income" :saving="shortTermMoney" :expenses="expenses" :loaded="loaded"
                 :show-data="showData" />
-            <CashflowEstimationTable :instalments="instalments" :salary="salary" :budget="budget" :show-data="showData" />
+            <CashflowEstimationTable :loaded="loaded" :instalments="instalments" :salary="salary" :budget="budget" :show-data="showData" />
         </div>
         <div class="col-12 col-lg-9">
         </div>

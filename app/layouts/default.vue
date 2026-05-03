@@ -10,7 +10,9 @@ useHead({
         { rel: "stylesheet", href: "mazer/assets/compiled/css/app-dark.css" },
         { rel: "stylesheet", href: "mazer/assets/compiled/css/iconly.css" },
         { rel: "stylesheet", href: "mazer/assets/extensions/toastify-js/src/toastify.css" },
-        { rel: "stylesheet", href: "mazer/assets/extensions/flatpickr/flatpickr.min.css" }
+        { rel: "stylesheet", href: "mazer/assets/extensions/flatpickr/flatpickr.min.css" },
+        { rel: "stylesheet", href: "mazer/assets/compiled/css/table-datatable-jquery.css" },
+        { rel: "stylesheet", href: "mazer/assets/extensions/datatables.net-bs5/css/dataTables.bootstrap5.min.css" }
     ],
     htmlAttrs: {
         lang: 'en'
@@ -21,7 +23,10 @@ useHead({
         { src: "mazer/assets/extensions/apexcharts/apexcharts.min.js" },
         { src: "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" },
         { src: "mazer/assets/extensions/toastify-js/src/toastify.js" },
-        { src: "mazer/assets/extensions/flatpickr/flatpickr.min.js" }
+        { src: "mazer/assets/extensions/flatpickr/flatpickr.min.js" },
+        { src: "mazer/assets/extensions/jquery/jquery.min.js" },
+        { src: "mazer/assets/extensions/datatables.net/js/jquery.dataTables.min.js" },
+        { src: "mazer/assets/extensions/datatables.net-bs5/js/dataTables.bootstrap5.min.js" }
     ]
 })
 

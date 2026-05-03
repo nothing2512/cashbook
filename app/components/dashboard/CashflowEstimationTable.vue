@@ -3,10 +3,44 @@ const props = defineProps({
     instalments: Array,
     salary: Number,
     budget: Number,
-    showData: Boolean
+    showData: Boolean,
+    loaded: Boolean,
 })
 
 const bulan = ["--", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
+
+const dtEl = ref(null)
+let dt = null
+
+onMounted(() => {
+    dt = $(dtEl.value).DataTable({
+        responsive: true,
+        info: false
+    })
+
+    const setTableColor = () => {
+        document.querySelectorAll('.dataTables_paginate .pagination').forEach(dt => {
+            dt.classList.add('pagination-primary')
+        })
+    }
+    setTableColor()
+    dt.on('draw', setTableColor)
+})
+
+const reloadTable = () => {
+    dt.clear()
+    let newData = [];
+    for (const idx in props.instalments) {
+        const i = props.instalments[idx]
+        newData.push([idx + 1, `${bulan[i.month]} ${i.year}`, rupiah(props.salary - i.sum - props.budget, props.showData)])
+    }
+    dt.rows.add(newData)
+    dt.draw()
+}
+
+watch(() => props.loaded, (newVal, oldVal) => {
+    reloadTable()
+})
 
 </script>
 
@@ -19,7 +53,7 @@ const bulan = ["--", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Ju
                     <p class="card-text"></p>
                     <!-- Table with outer spacing -->
                     <div class="table-responsive">
-                        <table class="table table-lg">
+                        <table class="table table-lg" ref="dtEl">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -28,9 +62,6 @@ const bulan = ["--", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Ju
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-if="!instalments || instalments.length == 0">
-                                    <td colspan="3" class="text-center">Tidak ada cicilan</td>
-                                </tr>
                                 <tr v-for="(i, idx) in instalments">
                                     <td>{{ idx + 1 }}</td>
                                     <td>{{ bulan[i.month] }} {{ i.year }}</td>
