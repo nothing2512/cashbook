@@ -28,7 +28,20 @@ onBeforeMount(async () => {
             setLoading(false)
             document.cookie = `token=${data.access_token}; path=/; max-age=${data.expires_in}; samesite=strict`
             document.cookie = `refreshToken=${data.refresh_token}; path=/; samesite=strict`
-            navigateTo('/')
+
+            const back = window.history.state.back
+            if (back) {
+                try {
+                    const backUrl = new URL(back, window.location.origin)
+                    if (backUrl.origin === window.location.origin) {
+                        navigateTo(back)
+                        return
+                    }
+                } catch (e) {
+                    navigateTo("/")
+                }
+            }
+            navigateTo("/")
         } catch (e) {
             setLoading(false)
             Swal.fire({
@@ -80,7 +93,8 @@ const login = async () => {
                 </div>
             </div>
             <div class="form-check form-check-lg d-flex align-items-end">
-                <input class="form-check-input me-2" type="checkbox" value="" id="flexCheckDefault" v-model="rememberMe">
+                <input class="form-check-input me-2" type="checkbox" value="" id="flexCheckDefault"
+                    v-model="rememberMe">
                 <label class="form-check-label text-gray-600" for="flexCheckDefault">
                     Keep me logged in
                 </label>
