@@ -59,10 +59,6 @@ create policy "categories policy" on categories for all to authenticated using (
 alter table transactions enable row level security;
 create policy "transactions policy" on transactions for all to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
--- default data
-INSERT INTO savings (name, num, amount) VALUES ('Cash', '', 0);
-INSERT INTO categories (name) VALUES ('default');
-
 -- views
 CREATE OR REPLACE VIEW transaction_views AS
 SELECT t.*, COALESCE(SUM(t2.amount), 0) AS child_amount, t.amount <= COALESCE(SUM(t2.amount), 0) AS paid_off
@@ -340,12 +336,14 @@ BEGIN
             instalment_id,
             amount,
             "month",
-            "year"
+            "year",
+            user_id
         ) VALUES (
             NEW.id,
             NEW.monthlypaid, -- default amount, adjust if needed
             calc_month,
-            calc_year
+            calc_year,
+            NEW.user_id
         );
     END LOOP;
 
@@ -408,8 +406,6 @@ CREATE TABLE settings (
 alter table settings enable row level security;
 create policy "settings policy" on settings for all to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
-INSERT INTO settings (salary, payday, show_digit, theme, auto_add_salary) VALUES (0, 0, false, 'dark', false);
-
 CREATE OR REPLACE FUNCTION run_salary_cron()
 RETURNS void
 LANGUAGE plpgsql
@@ -442,7 +438,8 @@ BEGIN
         amount,
         kind,
         status,
-        transaction_date
+        transaction_date,
+        user_id
     )
     SELECT
         s.saving_id,
@@ -452,7 +449,8 @@ BEGIN
         s.salary,
         'income',
         'paid',
-        v_now
+        v_now,
+        s.user_id
     FROM settings s
     WHERE
         EXTRACT(DAY FROM v_now) = s.payday
