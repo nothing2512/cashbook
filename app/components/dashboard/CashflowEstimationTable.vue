@@ -42,6 +42,10 @@ watch(() => props.loaded, (newVal, oldVal) => {
     reloadTable()
 })
 
+watch(() => props.showData, (newVal, oldVal) => {
+    reloadTable()
+})
+
 </script>
 
 <template>
