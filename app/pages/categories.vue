@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import Pagination from '~/components/Pagination.vue';
 
 const { fetchCategory } = useCrud()
+const { fetchAllCategories } = useCategory()
 
 const props = defineProps({
     setLoading: Function,
@@ -35,7 +36,7 @@ const showErr = (e) => {
 const getData = async () => {
     props.setLoading(true)
     try {
-        const response = await fetchCategory.all(page.value)
+        const response = await fetchAllCategories(page.value)
         categories.value = response.data
         totalData.value = response.totalData
         totalPage.value = response.totalPage
@@ -131,6 +132,8 @@ const removeData = async (data) => {
                                         <tr>
                                             <th>No</th>
                                             <th>Nama</th>
+                                            <th>Pemasukan bulan ini</th>
+                                            <th>Pengeluaran bulan ini</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -138,6 +141,8 @@ const removeData = async (data) => {
                                         <tr v-for="(category, idx) in categories">
                                             <td>{{ idx + 1 }}</td>
                                             <td>{{ category.name }}</td>
+                                            <td>{{ rupiah(category.income, showData) }}</td>
+                                            <td>{{ rupiah(category.expenses, showData) }}</td>
                                             <td>
                                                 <div class="buttons">
                                                     <button href="#" class="btn icon btn-primary"

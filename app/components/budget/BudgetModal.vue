@@ -51,7 +51,9 @@ const toast = (message) => {
 }
 
 const onSubmit = () => {
-    if (form.name == '') return toast("nama kategori wajib diisi")
+    if (form.name == '') return toast("Nama anggaran wajib diisi")
+    if (!form.amount) return toast("Jumlah anggaran wajib diisi")
+    if (!form.amount <= 0) return toast("Jumlah anggaran tidak boleh kurang dari sama dengan 0")
     modal.hide()
     props.onSubmit(form)
 }
@@ -87,7 +89,7 @@ const onSubmit = () => {
                                     class="form-control" v-model="form.title">
                             </div>
 
-                            <div class="form-group mandatory">
+                            <div class="form-group">
                                 <label class="form-label" for="description">Deskripsi </label>
                                 <textarea class="form-control" id="description" rows="3"
                                     v-model="form.description"></textarea>

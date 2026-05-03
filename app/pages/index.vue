@@ -1,6 +1,7 @@
 <script setup>
 import Swal from 'sweetalert2';
 import CardStat from '~/components/dashboard/CardStat.vue';
+import CashflowEstimation from '~/components/dashboard/CashflowEstimation.vue';
 import CurrentMonthFinanceChart from '~/components/dashboard/CurrentMonthFinanceChart.vue';
 import FinancialHealthChart from '~/components/dashboard/FinancialHealthChart.vue';
 import MonthlyReportChart from '~/components/dashboard/MonthlyReportChart.vue';
@@ -23,6 +24,7 @@ const unpaidCurrentInstalment = ref(0)
 const salary = ref(0)
 const budget = ref(0)
 const payday = ref(0)
+const instalments = ref([])
 
 const props = defineProps({
     setTab: Function,
@@ -92,6 +94,7 @@ onMounted(async () => {
         }
 
         response = await fetchTransaction.monthlyInstalments(1, 999)
+        instalments.value = response.data
         for (const data of response.data) {
             instalment.value += data.sum
         }
@@ -108,7 +111,7 @@ onMounted(async () => {
 
 <template>
     <section class="row">
-        <div class="col-12">
+        <div class="col-12 col-lg-9">
             <div class="row">
                 <CardStat title="Uang panas" tooltip="Total uang yang bisa dipakai kapanpun, tidak untuk jangka panjang" :value="rupiah(shortTermMoney, showData)" :color="'green'"
                     :icon="'iconly-boldBag-2'" />
@@ -141,8 +144,6 @@ onMounted(async () => {
                     :value="rupiah(salary - currentInstalment - budget, showData)" :color="'blue'"
                     :icon="'iconly-boldBuy'" :bg="salary - currentInstalment - budget < 0 ? 'danger' : ''" />
             </div>
-        </div>
-        <div class="col-12 col-lg-9">
             <div class="row">
                 <MonthlyReportChart id="main-financial" title="Grafik laporan keuangan" :loaded="loaded"
                     :incomes="incomeList" :expenses="expensesList" :show-data="showData" />
@@ -157,6 +158,9 @@ onMounted(async () => {
                 :loaded="loaded" :showData="showData" />
             <CurrentMonthFinanceChart :income="income" :saving="shortTermMoney" :expenses="expenses" :loaded="loaded"
                 :show-data="showData" />
+            <CashflowEstimation :instalments="instalments" :salary="salary" :budget="budget" :show-data="showData" />
+        </div>
+        <div class="col-12 col-lg-9">
         </div>
     </section>
 </template>

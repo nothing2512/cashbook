@@ -46,7 +46,7 @@ export const useApi = () => {
         }
     }
 
-    const fetchSupabaseList = async (method: any, endpoint: string, page: number, pageSize: number = 10, filters: any = {}) => {
+    const fetchSupabaseList = async (method: any, endpoint: string, page: number, pageSize: number = 10, filters: any = {}, body?: any) => {
         const token = useCookie('token')
         if (!token.value) {
             navigateTo('/login')
@@ -82,6 +82,7 @@ export const useApi = () => {
                 baseURL: config.public.supabaseUrl,
                 method: method,
                 headers: headers,
+                body: body,
             })
 
             const contentRange = response.headers.get("content-range")

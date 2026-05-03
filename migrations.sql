@@ -528,3 +528,29 @@ ADD CONSTRAINT fk_user
 FOREIGN KEY (user_id)
 REFERENCES auth.users(id)
 ON DELETE CASCADE;
+
+CREATE OR REPLACE FUNCTION monthly_categories(p_month INT, p_year INT)
+RETURNS TABLE (
+    id BIGINT,
+    name VARCHAR(50),
+    income NUMERIC(15, 2),
+    expenses NUMERIC(15, 2)
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        c.id,
+        c.name,
+        COALESCE(SUM(t.amount) FILTER (WHERE t.kind = 'income'), 0) AS income,
+        COALESCE(SUM(t.amount) FILTER (WHERE t.kind = 'expenses'), 0) AS expenses
+    FROM categories c
+    LEFT JOIN transactions t ON
+        t.category_id = c.id
+        AND EXTRACT(MONTH FROM t.transaction_date) = p_month
+        AND EXTRACT(YEAR FROM t.transaction_date) = p_year
+    GROUP BY c.id, c.name
+    ORDER BY c.id ASC;
+END;
+$$;
