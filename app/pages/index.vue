@@ -70,7 +70,7 @@ onMounted(async () => {
         currentInstalment.value = await fetchDashboard.fetchCurrentInstalment()
         unpaidCurrentInstalment.value = await fetchDashboard.fetchUnpaidCurrentInstalment()
 
-        response = await fetchSetting.detail(1)
+        response = await fetchSetting.all(1, 1)
         if (response.data.length > 0) {
             salary.value = response.data[0].salary
             payday.value = response.data[0].payday

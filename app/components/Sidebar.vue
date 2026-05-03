@@ -22,7 +22,7 @@ onMounted(async () => {
 })
 
 const getData = async () => {
-    const { data } = await fetchSetting.detail(1)
+    const { data } = await fetchSetting.all(1, 1)
     setting.value = data[0]
 
     let response = await fetchAccount.all(1, 999)
@@ -38,7 +38,7 @@ const changeTheme = async () => {
     setting.value.theme = setting.value.theme == 'dark' ? 'light' : 'dark'
     document.documentElement.setAttribute('data-bs-theme', setting.value.theme)
     await fetchSetting.edit({
-        id: 1,
+        id: setting.value.id,
         theme: setting.value.theme
     })
 }

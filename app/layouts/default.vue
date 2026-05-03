@@ -42,6 +42,7 @@ const loading = ref(false)
 const tab = ref("dashboard")
 const nowDateTime = ref('')
 const showData = ref(false)
+const settingId = ref(0)
 
 const { fetchSetting } = useCrud()
 
@@ -90,13 +91,16 @@ onMounted(async () => {
         nowDateTime.value = `${dd} ${mm} ${yy} ${HH}:${ii}:${ss}`;
     }, 1000)
 
-    const { data } = await fetchSetting.detail(1)
-    showData.value = data[0].show_digit
+    const { data } = await fetchSetting.all(1, 1)
+    if (data.length > 0) {
+        showData.value = data[0].show_digit
+        settingId.value = data[0].id
+    }
 })
 
 const setShowData = async () => {
     showData.value=!showData.value
-    await fetchSetting.edit({id: 1, show_digit: showData.value})
+    await fetchSetting.edit({id: settingId.value, show_digit: showData.value})
 }
 
 </script>
