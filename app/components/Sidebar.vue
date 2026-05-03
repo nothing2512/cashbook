@@ -151,7 +151,7 @@ const onCloseModal = async () => {
                     <li class="sidebar-item" :class="tab == 'budgets' ? 'active' : ''">
                         <NuxtLink href="/budgets" class='sidebar-link' @click="setTab('budgets')">
                             <i class="bi bi-calculator"></i>
-                            <span>Anggaran Bulanan</span>
+                            <span>Anggaran</span>
                         </NuxtLink>
                     </li>
 
@@ -176,7 +176,7 @@ const onCloseModal = async () => {
                     <li class="sidebar-item">
                         <a href="#" class='sidebar-link' @click.prevent="() => showModal = true">
                             <i class="bi bi-gear-fill"></i>
-                            <span>Settings</span>
+                            <span>Pengaturan</span>
                         </a>
                     </li>
 

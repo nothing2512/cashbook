@@ -152,3 +152,25 @@ export function calculateFinancialHealth(shortTermAsset: number, longTermAsset: 
 export function format2Digit(num: number) {
     return Math.trunc(num * 100) / 100;
 }
+
+export function formatIndonesianDate(date: Date | string | number): string {
+  const d = new Date(date)
+
+  // normalize to UTC+7 (Asia/Jakarta)
+  const utc = d.getTime() + (d.getTimezoneOffset() * 60000)
+  const jakarta = new Date(utc + (7 * 60 * 60 * 1000))
+
+  const MONTHS_ID_3 = [
+    "Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
+    "Jul", "Agu", "Sep", "Okt", "Nov", "Des"
+  ]
+
+  const day = String(jakarta.getDate()).padStart(2, "0")
+  const month = MONTHS_ID_3[jakarta.getMonth()]
+  const year = jakarta.getFullYear()
+  const hour = String(jakarta.getHours()).padStart(2, "0")
+  const minute = String(jakarta.getMinutes()).padStart(2, "0")
+  const second = String(jakarta.getSeconds()).padStart(2, "0")
+
+  return `${day} ${month} ${year} ${hour}:${minute}:${second}`
+}

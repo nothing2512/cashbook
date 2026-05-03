@@ -192,7 +192,7 @@ const removeData = async (data) => {
                                             <td><span class="badge bg-primary">{{ transaction.categories.name }}</span>
                                             </td>
                                             <td><span class="badge bg-info">{{ transaction.savings.name }}</span></td>
-                                            <td>{{ transaction.transaction_date }}</td>
+                                            <td>{{ formatIndonesianDate(transaction.transaction_date) }}</td>
                                             <td>
                                                 <div class="buttons">
                                                     <NuxtLink :href="`/settlement/debts/${transaction.id}`" class="btn icon btn-primary">

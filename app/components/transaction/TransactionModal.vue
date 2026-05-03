@@ -79,7 +79,6 @@ const toast = (message) => {
 
 const onSubmit = () => {
     if (form.title === '') return toast("Judul wajib diisi")
-    if (form.description === '') return toast("Deskripsi wajib diisi")
     if (form.amount === '' || form.amount === 0) return toast("Nominal wajib diisi")
     if (expenses) {
         for (const saving of props.savings) {
@@ -128,7 +127,7 @@ const onSubmit = () => {
                                 <input id="title" required="true" type="text" placeholder="Judul" class="form-control"
                                     v-model="form.title">
                             </div>
-                            <div class="form-group mandatory">
+                            <div class="form-group">
                                 <label class="form-label" for="description">Deskripsi </label>
                                 <textarea class="form-control" id="description" rows="3"
                                     v-model="form.description"></textarea>
