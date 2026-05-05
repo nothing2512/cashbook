@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import Pagination from '~/components/Pagination.vue';
 import AccountModal from '~/components/account/AccountModal.vue';
 import { rupiah } from '~/composables/utils';
+import TransferAccountModal from '~/components/account/TransferAccountModal.vue';
 
 const { fetchAccount } = useCrud()
 
@@ -21,6 +22,7 @@ const totalData = ref(0)
 const totalPage = ref(1)
 const showModal = ref(false)
 const modalData = ref()
+const showTransferModal = ref(false)
 
 let modalState = 'add'
 
@@ -62,6 +64,7 @@ const setModal = (state, data) => {
 
 const onCloseModal = () => {
     showModal.value = false
+    showTransferModal.value = false
 }
 
 const onModalSubmit = async (data) => {
@@ -119,19 +122,34 @@ const removeData = async (data) => {
     }
 }
 
+const onTransferAccount = async(data) => {
+    props.setLoading(true)
+    try {
+        await fetchAccount.edit({ id: data.source, amount: data.source_amount })
+        await fetchAccount.edit({ id: data.destination, amount: data.destination_amount })
+        await getData()
+    } catch(e) {
+        showErr(e)
+    }
+}
+
 </script>
 
 <template>
     <section class="section">
         <div class="row" id="basic-table">
+            
             <AccountModal :show="showModal" :on-close-modal="onCloseModal" :on-submit="onModalSubmit"
                 :data="modalData" />
+            <TransferAccountModal :show="showTransferModal" :on-submit="onTransferAccount" :on-close-modal="onCloseModal" :data="accounts" />
+
             <div class="col-12 col-md-12">
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body">
                             <h4>Daftar Akun Penyimpanan</h4>
                             <div class="buttons d-flex justify-content-end">
+                                <button href="#" class="btn btn-light" @click="() => showTransferModal = true">Transfer Antar Akun</button>
                                 <button href="#" class="btn btn-light" @click="setModal('add', null)">Tambah</button>
                             </div>
                             <p class="card-text"></p>

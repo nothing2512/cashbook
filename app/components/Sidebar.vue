@@ -13,8 +13,8 @@ const showModal = ref(false)
 const accounts = ref()
 const categories = ref()
 
-const logout = async () => {
-    await fetchLogout()
+const logout = () => {
+    fetchLogout()
     document.cookie = `token=; path=/; max-age=0; samesite=strict`
     document.cookie = `refreshToken=; path=/; max-age=0; samesite=strict`
     navigateTo("/login")
