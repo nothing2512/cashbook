@@ -3,7 +3,7 @@ export const useTransaction = () => {
 
     const incomes = async (page: number, pageSize:number=10) => fetchSupabaseList("GET", `/transactions?select=*,savings(name),categories(name)&order=transaction_date.desc&kind=eq.income&status=eq.paid&is_debt=eq.false&parent_id=is.null`, page, pageSize)
 
-    const expenses = async (page: number, pageSize:number=10) => fetchSupabaseList("GET", `/transactions?select=*,savings(name),categories(name)&order=transaction_date.desc&kind=eq.expenses&status=eq.paid&is_debt=eq.false&parent_id=is.null`, page, pageSize)
+    const expenses = async (page: number, pageSize:number=10) => fetchSupabaseList("GET", `/transactions?select=*,savings(name),categories(name),budgets(title)&order=transaction_date.desc&kind=eq.expenses&status=eq.paid&is_debt=eq.false&parent_id=is.null`, page, pageSize)
 
     const settlements = async (id: number, page: number, pageSize:number=10) => fetchSupabaseList("GET", `/transactions?select=*,savings(name),categories(name)&order=transaction_date.desc&parent_id=eq.${id}`, page, pageSize)
 

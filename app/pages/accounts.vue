@@ -6,7 +6,8 @@ import AccountModal from '~/components/account/AccountModal.vue';
 import { rupiah } from '~/composables/utils';
 import TransferAccountModal from '~/components/account/TransferAccountModal.vue';
 
-const { fetchAccount } = useCrud()
+const { fetchAccount, fetchCategory } = useCrud()
+const { fetchTransaction } = useTransaction()
 
 const props = defineProps({
     setLoading: Function,
@@ -23,6 +24,7 @@ const totalPage = ref(1)
 const showModal = ref(false)
 const modalData = ref()
 const showTransferModal = ref(false)
+const categories = ref()
 
 let modalState = 'add'
 
@@ -39,11 +41,14 @@ const showErr = (e) => {
 const getData = async () => {
     props.setLoading(true)
     try {
-        const response = await fetchAccount.all(page.value)
+        let response = await fetchAccount.all(page.value)
         accounts.value = response.data
         totalData.value = response.totalData
         totalPage.value = response.totalPage
         props.setLoading(false)
+
+        response = await fetchCategory.all(1, 999)
+        categories.value = response.data
     } catch (e) {
         showErr(e)
     }
@@ -127,6 +132,18 @@ const onTransferAccount = async(data) => {
     try {
         await fetchAccount.edit({ id: data.source, amount: data.source_amount })
         await fetchAccount.edit({ id: data.destination, amount: data.destination_amount })
+
+        if (parseInt(data.fee) > 0) await fetchTransaction.add({
+            saving_id: data.fee_on_source ? data.source : data.destination,
+            category_id: categories.value[0].id,
+            title: data.transfer_message,
+            description: ``,
+            amount: data.fee,
+            kind: "expenses",
+            status: "paid",
+            transaction_date: new Date()
+        })
+
         await getData()
     } catch(e) {
         showErr(e)

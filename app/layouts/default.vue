@@ -142,3 +142,9 @@ const setShowData = async () => {
         </div>
     </div>
 </template>
+
+<style>
+.modal-body {
+    max-height: 70dvh;
+}
+</style>

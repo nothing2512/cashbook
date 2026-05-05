@@ -172,6 +172,7 @@ const removeData = async (data) => {
                                             <th>No</th>
                                             <th>Judul</th>
                                             <th>Nominal</th>
+                                            <th>Anggaran</th>
                                             <th>Kategori</th>
                                             <th>Akun</th>
                                             <th>Tanggal</th>
@@ -183,6 +184,7 @@ const removeData = async (data) => {
                                             <td>{{ idx + 1 }}</td>
                                             <td>{{ transaction.title }}</td>
                                             <td>{{ rupiah(transaction.amount, props.showData) }}</td>
+                                            <td><span class="badge bg-success">{{ transaction.budgets?.title ?? '-' }}</span></td>
                                             <td><span class="badge bg-primary">{{ transaction.categories.name }}</span></td>
                                             <td><span class="badge bg-info">{{ transaction.savings.name }}</span></td>
                                             <td>{{ formatIndonesianDate(transaction.transaction_date) }}</td>

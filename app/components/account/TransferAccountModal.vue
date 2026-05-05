@@ -10,10 +10,12 @@ var props = defineProps({
 let form = reactive({
     source: props.data.length > 0 ? props.data[0].id : 0,
     destination: props.data.length > 1 ? props.data[1].id : 0,
-    source_out: 0,
-    destionation_in: 0,
+    transfer_amount: 0,
+    fee: 0,
     source_amount: 0,
-    destination_amount: 0
+    destination_amount: 0,
+    fee_on_source: true,
+    transfer_message: ''
 })
 
 let modal = null
@@ -31,10 +33,12 @@ watch(() => props.show, (newVal, oldVal) => {
         form = reactive({
             source: props.data.length > 0 ? props.data[0].id : 0,
             destination: props.data.length > 1 ? props.data[1].id : 0,
-            source_out: 0,
-            destionation_in: 0,
+            transfer_amount: 0,
+            fee: 0,
             source_amount: 0,
-            destination_amount: 0
+            destination_amount: 0,
+            fee_on_source: true,
+            transfer_message: ''
         })
         modal.show()
     }
@@ -54,20 +58,28 @@ const toast = (message) => {
 const onSubmit = () => {
     if (form.source === '' || form.source == 0) return toast("Akun sumber wajib diisi")
     if (form.destination === '' || form.destination == 0) return toast("Akun tujuan wajib diisi")
-    if (form.source_out === '' || form.source_out == 0) return toast("Nominal sumber wajib diisi")
-    if (form.destionation_in === '' || form.destionation_in == 0) return toast("Nominal tujuan wajib diisi")
+    if (form.transfer_amount === '' || form.transfer_amount == 0) return toast("Nominal sumber wajib diisi")
+    if (form.fee === '' || form.fee == 0) return toast("Nominal tujuan wajib diisi")
 
+    let sourceName = ''
+    let destinationName = ''
 
     for (const account of props.data) {
         if (account.id == form.source) {
-            if (parseInt(form.source_out) > account.amount) {
+            if (parseInt(form.transfer_amount) > account.amount) {
                 return toast("Nominal pada akun sumber tidak mencukupi")
             }
-            form.source_amount = account.amount - form.source_out
+            form.source_amount = account.amount - form.transfer_amount
+            sourceName = account.name
         }
 
-        if (account.id == form.destination) form.destination_amount = account.amount + form.destionation_in;
+        if (account.id == form.destination) {
+            form.destination_amount = account.amount + form.transfer_amount;
+            destinationName = account.name
+        }
     }
+
+    form.transfer_message = `Biaya admin transfer [${sourceName}] -> [${destinationName}]`
 
     modal.hide()
     props.onSubmit(form)
@@ -114,15 +126,21 @@ const onSubmit = () => {
                             </div>
 
                             <div class="form-group mandatory">
-                                <label class="form-label" for="source_out">Nominal dikirim</label>
-                                <input id="source_out" required="true" type="number" placeholder="Nominal dikirim"
-                                    class="form-control" v-model="form.source_out">
+                                <label class="form-label" for="transfer_amount">Nominal dikirim</label>
+                                <input id="transfer_amount" required="true" type="number" placeholder="Nominal dikirim"
+                                    class="form-control" v-model="form.transfer_amount">
                             </div>
 
                             <div class="form-group mandatory">
-                                <label class="form-label" for="destionation_in">Nominal diterima</label>
-                                <input id="destionation_in" required="true" type="number" placeholder="Nominal diterima"
-                                    class="form-control" v-model="form.destionation_in">
+                                <label class="form-label" for="fee">Biaya admin</label>
+                                <input id="fee" required="true" type="number" placeholder="Biaya admin"
+                                    class="form-control" v-model="form.fee">
+                            </div>
+
+                            <div class="form-check form-switch mt-3 mb-3">
+                                <input class="form-check-input" type="checkbox" id="fee_on_source"
+                                    v-model="form.fee_on_source" :disabled="form.fee == 0">
+                                <label class="form-check-label" for="fee_on_source">Centang jika bayar biaya admin dengan akun sumber</label>
                             </div>
 
                         </div>

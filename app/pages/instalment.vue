@@ -6,7 +6,7 @@ import Pagination from '~/components/Pagination.vue';
 import { rupiah } from '~/composables/utils';
 import InstalmentModal from '~/components/instalment/InstalmentModal.vue';
 
-const { fetchInstalment, fetchAccount } = useCrud()
+const { fetchInstalment, fetchAccount, fetchCategory } = useCrud()
 const { fetchTransaction } = useTransaction()
 
 const props = defineProps({
@@ -19,6 +19,7 @@ const bulan = ["--", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Ju
 
 props.setTab("instalment")
 
+const categories = ref()
 const instalments = ref()
 const monthlyInstalments = ref()
 const page = ref(1)
@@ -59,6 +60,9 @@ const getData = async () => {
         monthlyInstalments.value = response.data
         totalDataMonthly.value = response.totalData
         totalPageMonthly.value = response.totalPage
+
+        response = await fetchCategory.all(1, 999)
+        categories.value = response.data
 
         props.setLoading(false)
     } catch (e) {
@@ -176,7 +180,7 @@ const doPay = async (data) => {
         props.setLoading(true)
         await fetchTransaction.add({
             saving_id: data.saving_id,
-            category_id: 1,
+            category_id: categories.value[0].id,
             title: `Pembayaran cicilan pada ${bulan[paidMonth]} ${paidYear}`,
             description: `Pembayaran cicilan pada ${bulan[paidMonth]} ${paidYear}`,
             amount: paidData.value,
