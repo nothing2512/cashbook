@@ -9,7 +9,7 @@ const totalRemainingBudget = ref(0)
 
 watch(() => props.remainingBudgets, (newVal, oldVal) => {
     for (const b of props.remainingBudgets) {
-        totalRemainingBudget.value += b.amount
+        totalRemainingBudget.value += budget.amount - budget.expenses
     }
 }) 
 
