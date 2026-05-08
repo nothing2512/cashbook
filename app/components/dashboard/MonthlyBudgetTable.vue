@@ -5,6 +5,14 @@ const props = defineProps({
     showData: Boolean,
 })
 
+const totalRemainingBudget = ref(0)
+
+watch(() => props.remainingBudgets, (newVal, oldVal) => {
+    for (const b of props.remainingBudgets) {
+        totalRemainingBudget.value += b.amount
+    }
+}) 
+
 </script>
 
 <template>
@@ -70,6 +78,10 @@ const props = defineProps({
                                     <td>{{ rupiah(budget.amount, showData) }} </td>
                                     <td>{{ rupiah(budget.expenses, showData) }} </td>
                                     <td>{{ rupiah(budget.amount - budget.expenses, showData) }} </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5">Total Sisa Anggaran</td>
+                                    <td>{{ rupiah(totalRemainingBudget, showData) }}</td>
                                 </tr>
                             </tbody>
                         </table>
