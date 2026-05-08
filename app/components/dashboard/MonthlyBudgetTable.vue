@@ -3,15 +3,8 @@ const props = defineProps({
     overBudgets: Array,
     remainingBudgets: Array,
     showData: Boolean,
+    totalRemainingBudget: Number,
 })
-
-const totalRemainingBudget = ref(0)
-
-watch(() => props.remainingBudgets, (newVal, oldVal) => {
-    for (const b of props.remainingBudgets) {
-        totalRemainingBudget.value += budget.amount - budget.expenses
-    }
-}) 
 
 </script>
 

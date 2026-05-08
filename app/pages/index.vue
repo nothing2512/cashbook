@@ -28,6 +28,7 @@ const payday = ref(0)
 const instalments = ref([])
 const overBudgets = ref([])
 const remainingBudgets = ref([])
+const totalRemainingBudget = ref(0)
 
 const props = defineProps({
     setTab: Function,
@@ -102,7 +103,10 @@ onMounted(async () => {
         response = await fetchMonthlyBudget(1, 999)
         for (const data of response.data) {
             if (data.amount < data.expenses) overBudgets.value.push(data)
-            else remainingBudgets.value.push(data)
+            else {
+                remainingBudgets.value.push(data)
+                totalRemainingBudget.value += data.amount - data.expenses
+            }
             budget.value += data.amount
         }
 
@@ -153,7 +157,7 @@ onMounted(async () => {
             <div class="row">
                 <MonthlyReportChart id="main-financial" title="Grafik laporan keuangan" :loaded="loaded"
                     :incomes="incomeList" :expenses="expensesList" :show-data="showData" />
-                <MonthlyBudgetTable :over-budgets="overBudgets" :remaining-budgets="remainingBudgets" :show-data="showData" />
+                <MonthlyBudgetTable :total-remaining-budget="totalRemainingBudget" :over-budgets="overBudgets" :remaining-budgets="remainingBudgets" :show-data="showData" />
                 <MonthlyReportChart id="debt-financial" title="Grafik laporan hutang" :loaded="loaded"
                     :incomes="debtList" :expenses="receivablesList" income-text="Hutang" expenses-text="Piutang"
                     :show-data="showData" />
