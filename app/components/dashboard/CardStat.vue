@@ -8,6 +8,7 @@ const props = defineProps({
     bg: String,
     href: String,
     tooltip: String,
+    showData: Boolean,
 })
 
 const tooltipEl = ref(null)
@@ -15,10 +16,12 @@ onMounted(() => {
     if (props.tooltip) new bootstrap.Tooltip(tooltipEl.value)
 })
 
+const hovered = ref(false)
+
 </script>
 
 <template>
-    <div class="col">
+    <div class="col" @mouseenter="hovered = true" @mouseleave="hovered = false">
         <div class="card" :class="bg != undefined ? `bg-${bg}` : ''">
             <div class="card-body px-4 py-4-5">
                 <div class="position-absolute top-0 end-0 m-3">
@@ -36,7 +39,7 @@ onMounted(() => {
                     </div>
                     <div class="col-md-10 col-lg-12 col-xl-12 col-xxl-9">
                         <h6 class="text-muted font-semibold">{{ title }}</h6>
-                        <h6 class="font-extrabold mb-0">{{ value }}</h6>
+                        <h6 class="font-extrabold mb-0">{{ showData || hovered ? value : '******' }}</h6>
                     </div>
                 </div>
             </div>

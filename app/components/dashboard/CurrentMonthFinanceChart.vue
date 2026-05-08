@@ -35,15 +35,17 @@ watch(() => props.loaded, (newVal, oldVal) => {
     chartVisitorsProfile.render()
 })
 
+const hovered = ref(false)
+
 </script>
 
 <template>
-    <div class="col-12">
+    <div class="col-12" @mouseenter="hovered = true" @mouseleave="hovered = false">
         <div class="card">
             <div class="card-header">
                 <h4>Keuangan bulan ini</h4>
             </div>
-            <div class="card-body" :style="showData ? '' : 'filter: blur(.5rem)'">
+            <div class="card-body" :style="showData || hovered ? '' : 'filter: blur(.5rem)'">
                 <div id="current-month-finance"></div>
             </div>
         </div>

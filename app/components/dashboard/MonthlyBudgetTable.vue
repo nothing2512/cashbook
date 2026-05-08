@@ -6,10 +6,12 @@ const props = defineProps({
     totalRemainingBudget: Number,
 })
 
+const hovered = ref(false)
+
 </script>
 
 <template>
-    <div class="col-12">
+    <div class="col-12" @mouseenter="hovered = true" @mouseleave="hovered = false">
         <div class="card">
             <div class="card-content">
                 <div class="card-body">
@@ -37,9 +39,9 @@ const props = defineProps({
                                     <td>{{ idx + 1 }}</td>
                                     <td>{{ budget.title }} </td>
                                     <td>{{ budget.category }}</td>
-                                    <td>{{ rupiah(budget.amount, showData) }} </td>
-                                    <td>{{ rupiah(budget.expenses, showData) }} </td>
-                                    <td>{{ rupiah(budget.expenses - budget.amount, showData) }} </td>
+                                    <td>{{ rupiah(budget.amount, showData || hovered) }} </td>
+                                    <td>{{ rupiah(budget.expenses, showData || hovered) }} </td>
+                                    <td>{{ rupiah(budget.expenses - budget.amount, showData || hovered) }} </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -68,13 +70,13 @@ const props = defineProps({
                                     <td>{{ idx + 1 }}</td>
                                     <td>{{ budget.title }} </td>
                                     <td>{{ budget.category }}</td>
-                                    <td>{{ rupiah(budget.amount, showData) }} </td>
-                                    <td>{{ rupiah(budget.expenses, showData) }} </td>
-                                    <td>{{ rupiah(budget.amount - budget.expenses, showData) }} </td>
+                                    <td>{{ rupiah(budget.amount, showData || hovered) }} </td>
+                                    <td>{{ rupiah(budget.expenses, showData || hovered) }} </td>
+                                    <td>{{ rupiah(budget.amount - budget.expenses, showData || hovered) }} </td>
                                 </tr>
                                 <tr>
                                     <td colspan="5">Total Sisa Anggaran</td>
-                                    <td>{{ rupiah(totalRemainingBudget, showData) }}</td>
+                                    <td>{{ rupiah(totalRemainingBudget, showData || hovered) }}</td>
                                 </tr>
                             </tbody>
                         </table>

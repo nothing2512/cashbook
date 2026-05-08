@@ -123,35 +123,35 @@ onMounted(async () => {
     <section class="row">
         <div class="col-12 col-lg-9">
             <div class="row">
-                <CardStat title="Uang panas" tooltip="Total uang yang bisa dipakai kapanpun, tidak untuk jangka panjang" :value="rupiah(shortTermMoney, showData)" :color="'green'"
-                    :icon="'iconly-boldBag-2'" />
-                <CardStat title="Uang dingin" tooltip="Total simpanan uang jangka panjang, bisa dipakai jika terdesak" :value="rupiah(longTermMoney, showData)" :color="'red'"
-                    :icon="'iconly-boldTicket'" />
-                <CardStat title="Pemasukan" tooltip="Total pemasukan bulan ini tidak termasuk gaji pokok yang belum ditambahkan (hutang akan masuk sebagai pemasukan juga)" :value="rupiah(income, showData)" :color="'purple'"
-                    :icon="'iconly-boldActivity'" bg="success" href="/incomes" />
-                <CardStat title="Pengeluaran" tooltip="Total pengeluaran bulan ini, piutang juga termasuk sebagai pengeluaran juga" :value="rupiah(expenses, showData)" :color="'blue'"
-                    :icon="'iconly-boldBuy'" bg="secondary" href="/expenses" />
+                <CardStat title="Uang panas" tooltip="Total uang yang bisa dipakai kapanpun, tidak untuk jangka panjang" :value="rupiah(shortTermMoney, true)" :color="'green'"
+                    :icon="'iconly-boldBag-2'" :show-data="showData" />
+                <CardStat title="Uang dingin" tooltip="Total simpanan uang jangka panjang, bisa dipakai jika terdesak" :value="rupiah(longTermMoney, true)" :color="'red'"
+                    :icon="'iconly-boldTicket'" :show-data="showData" />
+                <CardStat title="Pemasukan" tooltip="Total pemasukan bulan ini tidak termasuk gaji pokok yang belum ditambahkan (hutang akan masuk sebagai pemasukan juga)" :value="rupiah(income, true)" :color="'purple'"
+                    :icon="'iconly-boldActivity'" bg="success" href="/incomes" :show-data="showData" />
+                <CardStat title="Pengeluaran" tooltip="Total pengeluaran bulan ini, piutang juga termasuk sebagai pengeluaran juga" :value="rupiah(expenses, true)" :color="'blue'"
+                    :icon="'iconly-boldBuy'" bg="secondary" href="/expenses" :show-data="showData" />
             </div>
             <div class="row">
-                <CardStat title="Tagihan" tooltip="Tagihan pada cicilan yang belum terbayarkan bulan ini" :value="rupiah(unpaidCurrentInstalment, showData)"
+                <CardStat title="Tagihan" tooltip="Tagihan pada cicilan yang belum terbayarkan bulan ini" :value="rupiah(unpaidCurrentInstalment, true)"
                     :color="'blue'" :icon="'iconly-boldWallet'" :bg="unpaidCurrentInstalment > 0 ? 'danger' : ''"
-                    href="/instalment" />
-                <CardStat title="Hutang" tooltip="Sisa hutang yang belum dibayarkan hingga hari ini, tidak termasuk cicilan" :value="rupiah(debt, showData)" :color="'black'"
-                    :icon="'iconly-boldPaper'" :bg="debt > 0 ? 'danger' : 'success'" href="/debts" />
-                <CardStat title="Piutang" tooltip="Sisa piutang yang belum dibayarkan hingga hari ini" :value="rupiah(receivables, showData)" :color="'red'"
-                    :icon="'iconly-boldFolder'" bg="success" href="/receivables" />
-                <CardStat title="Anggaran" tooltip="Jumlah anggaran / rencana pengeluaran bulanan " :value="rupiah(budget, showData)" :color="'green'"
-                    :icon="'iconly-boldDiscount'" href="/budgets" />
+                    href="/instalment" :show-data="showData" />
+                <CardStat title="Hutang" tooltip="Sisa hutang yang belum dibayarkan hingga hari ini, tidak termasuk cicilan" :value="rupiah(debt, true)" :color="'black'"
+                    :icon="'iconly-boldPaper'" :bg="debt > 0 ? 'danger' : 'success'" href="/debts" :show-data="showData" />
+                <CardStat title="Piutang" tooltip="Sisa piutang yang belum dibayarkan hingga hari ini" :value="rupiah(receivables, true)" :color="'red'"
+                    :icon="'iconly-boldFolder'" bg="success" href="/receivables" :show-data="showData" />
+                <CardStat title="Anggaran" tooltip="Jumlah anggaran / rencana pengeluaran bulanan " :value="rupiah(budget, true)" :color="'green'"
+                    :icon="'iconly-boldDiscount'" href="/budgets" :show-data="showData" />
             </div>
             <div class="row">
-                <CardStat title="Cicilan" tooltip="Jumlah seluruh cicilan yang belum terbayarkan" :value="rupiah(instalment, showData)" :color="'green'"
-                    :icon="'iconly-boldBag-2'" :bg="instalment > 0 ? 'danger' : ''" href="/instalment" />
+                <CardStat title="Cicilan" tooltip="Jumlah seluruh cicilan yang belum terbayarkan" :value="rupiah(instalment, true)" :color="'green'"
+                    :icon="'iconly-boldBag-2'" :bg="instalment > 0 ? 'danger' : ''" href="/instalment" :show-data="showData" />
                 <CardStat title="Bulan cicilan" tooltip="Jumlah bulan tagihan cicilan yang belum terbayarkan" :value="`${totalInstalment} Bulan`" :color="'red'"
-                    :icon="'iconly-boldTicket'" :bg="totalInstalment > 0 ? 'danger' : ''" href="/instalment" />
-                <CardStat title="Debtflow" tooltip="Jumlah hutang + cicilan yang belum dibayarkan" :value="rupiah(debt + instalment, showData)" :color="'purple'"
-                    :icon="'iconly-boldActivity'" :bg="debt + instalment > 0 ? 'danger' : ''" />
+                    :icon="'iconly-boldTicket'" :bg="totalInstalment > 0 ? 'danger' : ''" href="/instalment" :show-data="showData" />
+                <CardStat title="Debtflow" tooltip="Jumlah hutang + cicilan yang belum dibayarkan" :value="rupiah(debt + instalment, true)" :color="'purple'"
+                    :icon="'iconly-boldActivity'" :bg="debt + instalment > 0 ? 'danger' : ''" :show-data="showData" />
                 <CardStat title="Cashflow" tooltip="Jumlah uang sisa dari gaji pokok per bulan (gaji pokok - cicilan bulan ini - anggaran)"
-                    :value="rupiah(salary - currentInstalment - budget, showData)" :color="'blue'"
+                    :value="rupiah(salary - currentInstalment - budget, true)" :color="'blue'" :show-data="showData"
                     :icon="'iconly-boldBuy'" :bg="salary - currentInstalment - budget < 0 ? 'danger' : ''" />
             </div>
             <div class="row">

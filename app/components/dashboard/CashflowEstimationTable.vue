@@ -46,10 +46,12 @@ watch(() => props.showData, (newVal, oldVal) => {
     reloadTable()
 })
 
+const hovered = ref(false)
+
 </script>
 
 <template>
-    <div class="col-12">
+    <div class="col-12" @mouseenter="hovered = true" @mouseleave="hovered = false">
         <div class="card">
             <div class="card-content">
                 <div class="card-body">
@@ -69,7 +71,7 @@ watch(() => props.showData, (newVal, oldVal) => {
                                 <tr v-for="(i, idx) in instalments">
                                     <td>{{ idx + 1 }}</td>
                                     <td>{{ bulan[i.month] }} {{ i.year }}</td>
-                                    <td>{{ rupiah(salary - i.sum - budget, showData) }} </td>
+                                    <td>{{ rupiah(salary - i.sum - budget, showData || hovered) }} </td>
                                 </tr>
                             </tbody>
                         </table>

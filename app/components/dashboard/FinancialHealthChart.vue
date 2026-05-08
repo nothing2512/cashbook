@@ -86,6 +86,8 @@ watch(() => props.loaded, (newVal, oldVal) => {
     chartVisitorsProfile.render()
 })
 
+const hovered = ref(false)
+
 </script>
 
 <template>
@@ -209,12 +211,12 @@ watch(() => props.loaded, (newVal, oldVal) => {
             </div>
         </div>
     </Teleport>
-    <div class="col-12">
+    <div class="col-12" @mouseenter="hovered = true" @mouseleave="hovered = false">
         <div class="card">
             <div class="card-header">
                 <h4>Kesehatan Finansial</h4>
             </div>
-            <div class="card-body" :style="showData ? '' : 'filter: blur(.5rem)'">
+            <div class="card-body" :style="showData || hovered ? '' : 'filter: blur(.5rem)'">
                 <button class="btn btn-sm btn-light position-absolute top-0 end-0 m-3" data-bs-toggle="modal"
                     data-bs-target="#financialHealthModal">Breakdown</button>
                 <div id="finance-health"></div>
