@@ -39,7 +39,7 @@ const props = defineProps({
 props.setTab("dashboard")
 
 const { fetchDashboard } = useDashboard()
-const { fetchAccount, fetchSetting, fetchBudget } = useCrud()
+const { fetchAccount, fetchSetting } = useCrud()
 const { fetchTransaction } = useTransaction()
 const { fetchMonthlyBudget } = useRpc()
 

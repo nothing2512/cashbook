@@ -83,8 +83,6 @@ const onSubmit = () => {
                                 <input id="name" required="true" type="text" placeholder="Judul cicilan"
                                     class="form-control" v-model="form.name">
                             </div>
-                        </div>
-                        <div class="modal-body">
                             <div class="form-group mandatory">
                                 <label class="form-label" for="name">Bulan mulai </label>
                                 <select class="form-select" id="account" v-model="form.startmonth">
@@ -92,25 +90,16 @@ const onSubmit = () => {
                                     </option>
                                 </select>
                             </div>
-                        </div>
-
-                        <div class="modal-body">
                             <div class="form-group mandatory">
                                 <label class="form-label" for="startyear">Tahun mulai </label>
                                 <input id="startyear" required="true" type="number" placeholder="Tahun mulai"
                                     class="form-control" v-model="form.startyear">
                             </div>
-                        </div>
-
-                        <div class="modal-body">
                             <div class="form-group mandatory">
                                 <label class="form-label" for="totalmonth">Tenor (berpaa bulan cicilan) </label>
                                 <input id="totalmonth" required="true" type="number" placeholder="Tenor"
                                     class="form-control" v-model="form.totalmonth">
                             </div>
-                        </div>
-
-                        <div class="modal-body">
                             <div class="form-group mandatory">
                                 <label class="form-label" for="monthlypaid">Cicilan per bulan </label>
                                 <input id="monthlypaid" required="true" type="number" placeholder="Cicilan per bulan"

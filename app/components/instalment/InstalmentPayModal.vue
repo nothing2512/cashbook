@@ -74,8 +74,7 @@ const onSubmit = () => {
                                 <input disabled="true" id="paid" required="true" type="text"
                                     class="form-control disabled" :value="rupiah(props.paid, true)">
                             </div>
-                        </div>
-                        <div class="modal-body">
+                            
                             <div class="form-group mandatory">
                                 <label class="form-label" for="name">Akun penyimpanan </label>
                                 <select class="form-select" id="saving" v-model="form.saving_id">

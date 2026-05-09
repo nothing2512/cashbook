@@ -102,7 +102,7 @@ const updateData = async (data) => {
 
 const removeData = async (data) => {
     const result = await Swal.fire({
-        title: `Hapus anggaran "${data.name}" ?`,
+        title: `Hapus anggaran "${data.title}" ?`,
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: 'Ya, hapus!',

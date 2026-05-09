@@ -6,7 +6,7 @@ import Pagination from '~/components/Pagination.vue';
 import { rupiah } from '~/composables/utils';
 import InstalmentModal from '~/components/instalment/InstalmentModal.vue';
 
-const { fetchInstalment, fetchAccount, fetchCategory } = useCrud()
+const { fetchInstalment, fetchAccount, fetchCategory, fetchBudget, fetchSetting } = useCrud()
 const { fetchTransaction } = useTransaction()
 
 const props = defineProps({
@@ -32,7 +32,10 @@ const showModal = ref(false)
 const modalData = ref()
 const savings = ref()
 const showPaidModal = ref(false)
+const showSimulationModal = ref(false)
 const paidData = ref(0)
+const salary = ref(0)
+const budget = ref(0)
 
 let paidMonth = 0
 let paidYear = 0
@@ -100,6 +103,16 @@ const getFullData = async () => {
 
         response = await fetchAccount.all(1, 999)
         savings.value = response.data
+
+        response = await fetchBudget.all(page.value, 999)
+        for (const data of response.data) {
+            budget.value += data.amount
+        }
+
+        response = await fetchSetting.all(1, 1)
+        if (response.data.length > 0) {
+            salary.value = response.data[0].salary
+        }
 
         props.setLoading(false)
     } catch (e) {
@@ -202,6 +215,7 @@ const doPay = async (data) => {
         <div class="row" id="basic-table">
             <InstalmentModal :show="showModal" :on-close-modal="onCloseModal" :on-submit="addData" :data="modalData" />
             <InstalmentPayModal :show="showPaidModal" :savings="savings" :paid="paidData" :on-submit="doPay" :on-close-modal="() => showPaidModal=false" />
+            <InstalmentSimulationModal :show="showSimulationModal" :instalments="monthlyInstalments" :salary="salary" :budget="budget" :on-close-modal="() => showSimulationModal=false" />
 
             <div class="col-12 col-md-12">
                 <div class="card">
@@ -209,7 +223,8 @@ const doPay = async (data) => {
                         <div class="card-body">
                             <h4>Cicilan</h4>
                             <div class="buttons d-flex justify-content-end">
-                                <button href="#" class="btn btn-light" @click="setModal(null)">Tambah</button>
+                                <button class="btn btn-light" @click="() => showSimulationModal=true">Simulasi</button>
+                                <button class="btn btn-light" @click="setModal(null)">Tambah</button>
                             </div>
                             <p class="card-text"></p>
                             <!-- Table with outer spacing -->
@@ -236,7 +251,7 @@ const doPay = async (data) => {
                                             <td>{{ rupiah(i.monthlypaid, props.showData) }}</td>
                                             <td>
                                                 <div class="buttons">
-                                                    <button href="#" class="btn icon btn-danger"
+                                                    <button class="btn icon btn-danger"
                                                         @click="removeData(i)">
                                                         <i class="bi bi-x"></i>
                                                     </button>
@@ -275,7 +290,7 @@ const doPay = async (data) => {
                                             <td>{{ rupiah(i.sum, props.showData) }}</td>
                                             <td>
                                                 <div class="buttons">
-                                                    <button href="#" class="btn icon btn-primary" @click="pay(i.month, i.year, i.sum)">
+                                                    <button class="btn icon btn-primary" @click="pay(i.month, i.year, i.sum)">
                                                         Bayar
                                                     </button>
                                                 </div>
