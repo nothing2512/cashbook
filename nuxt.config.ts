@@ -2,7 +2,8 @@
 export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
-    '@nuxt/ui'
+    '@nuxt/ui',
+    '@vite-pwa/nuxt',
   ],
 
   devtools: {
@@ -32,5 +33,27 @@ export default defineNuxtConfig({
       supabaseApiKey: process.env.SUPABASE_API_KEY,
       superadminEmail: process.env.SUPERADMIN_EMAIL,
     }
-  }
+  },
+
+  pwa: {
+    registerType: 'autoUpdate',
+    manifest: {
+      name: 'Cashbook',
+      short_name: 'Cashbook',
+      theme_color: '#000000',
+      background_color: '#ffffff',
+      display: 'standalone',
+
+      icons: [
+        {
+          src: '/mazer/assets/compiled/png/logo.png',
+          sizes: '512x512',
+          type: 'image/png',
+        },
+      ],
+    },
+    devOptions: {
+      enabled: true
+    }
+  },
 })

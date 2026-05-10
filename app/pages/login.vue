@@ -125,11 +125,6 @@ const login = async () => {
                     <i class="bi bi-shield-lock"></i>
                 </div>
             </div>
-            <div class="form-check form-check-lg d-flex align-items-end">
-                <label class="form-check-label text-gray-600" for="flexCheckDefault">
-                    Keep me logged in
-                </label>
-            </div>
             <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Log in</button>
         </form>
     </div>
