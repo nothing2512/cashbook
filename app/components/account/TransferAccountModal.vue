@@ -59,7 +59,6 @@ const onSubmit = () => {
     if (form.source === '' || form.source == 0) return toast("Akun sumber wajib diisi")
     if (form.destination === '' || form.destination == 0) return toast("Akun tujuan wajib diisi")
     if (form.transfer_amount === '' || form.transfer_amount == 0) return toast("Nominal sumber wajib diisi")
-    if (form.fee === '' || form.fee == 0) return toast("Nominal tujuan wajib diisi")
 
     let sourceName = ''
     let destinationName = ''

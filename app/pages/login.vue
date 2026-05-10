@@ -13,7 +13,6 @@ definePageMeta({
 const email = ref('')
 const password = ref('')
 const setLoading = inject('setLoading')
-const rememberMe = ref(false)
 
 onBeforeMount(async () => {
     const token = useCookie('token')
@@ -61,7 +60,7 @@ const login = async () => {
         let { data } = await fetchLogin(email.value, password.value)
         setLoading(false)
         document.cookie = `token=${data.access_token}; path=/; max-age=${data.expires_in}; samesite=strict`
-        if (rememberMe.value) document.cookie = `refreshToken=${data.refresh_token}; path=/; samesite=strict`
+        document.cookie = `refreshToken=${data.refresh_token}; path=/; samesite=strict`
 
         let response = await fetchSetting.all(1, 1)
         data = response.data
@@ -115,8 +114,6 @@ const login = async () => {
                 </div>
             </div>
             <div class="form-check form-check-lg d-flex align-items-end">
-                <input class="form-check-input me-2" type="checkbox" value="" id="flexCheckDefault"
-                    v-model="rememberMe">
                 <label class="form-check-label text-gray-600" for="flexCheckDefault">
                     Keep me logged in
                 </label>
