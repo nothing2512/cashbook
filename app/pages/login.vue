@@ -34,14 +34,14 @@ onBeforeMount(async () => {
                 try {
                     const backUrl = new URL(back, window.location.origin)
                     if (backUrl.origin === window.location.origin) {
-                        navigateTo(back)
+                        document.location.href = "/" + back
                         return
                     }
                 } catch (e) {
-                    navigateTo("/")
+                    document.location.href = "/"
                 }
             }
-            navigateTo("/")
+            document.location.href = "/"
         } catch (e) {
             setLoading(false)
             Swal.fire({
@@ -79,10 +79,22 @@ const login = async () => {
                 amount: 0
             })
 
-            await fetchCategory.add({name: 'default'})
+            await fetchCategory.add({ name: 'default' })
         }
 
-        navigateTo('/')
+        const back = window.history.state.back
+        if (back) {
+            try {
+                const backUrl = new URL(back, window.location.origin)
+                if (backUrl.origin === window.location.origin) {
+                    document.location.href = "/" + back
+                    return
+                }
+            } catch (e) {
+                document.location.href = "/"
+            }
+        }
+        document.location.href = "/"
     } catch (e) {
         setLoading(false)
         Swal.fire({
