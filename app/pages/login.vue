@@ -34,7 +34,7 @@ onBeforeMount(async () => {
                 try {
                     const backUrl = new URL(back, window.location.origin)
                     if (backUrl.origin === window.location.origin) {
-                        document.location.href = "/" + back
+                        document.location.href = back
                         return
                     }
                 } catch (e) {
@@ -87,7 +87,7 @@ const login = async () => {
             try {
                 const backUrl = new URL(back, window.location.origin)
                 if (backUrl.origin === window.location.origin) {
-                    document.location.href = "/" + back
+                    document.location.href = back
                     return
                 }
             } catch (e) {
