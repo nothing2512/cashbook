@@ -103,6 +103,12 @@ const onSubmit = () => {
     props.onSubmit(form)
 }
 
+const moneyRemaining = () => {
+    for (const saving of props.savings) {
+        if (saving.id == form.saving_id) return saving.amount - form.amount
+    }
+}
+
 </script>
 
 <template>
@@ -159,6 +165,10 @@ const onSubmit = () => {
                                 <label class="form-label" for="amount">Nominal </label>
                                 <input id="amount" required="true" type="number" placeholder="Nominal"
                                     class="form-control" v-model="form.amount">
+                            </div>
+                            <div class="form-group" v-if="expenses">
+                                <label class="form-label">Sisa uang</label>
+                                <h6>{{ rupiah(moneyRemaining(), true) }}</h6>
                             </div>
                             <div class="form-group mandatory">
                                 <label class="form-label" for="transactiondate">Tanggal Transaksi </label>
