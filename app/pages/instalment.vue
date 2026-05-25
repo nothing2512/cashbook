@@ -104,6 +104,9 @@ const getFullData = async () => {
         response = await fetchAccount.all(1, 999)
         savings.value = response.data
 
+        response = await fetchCategory.all(1, 999)
+        categories.value = response.data
+
         response = await fetchBudget.all(page.value, 999)
         for (const data of response.data) {
             budget.value += data.amount
