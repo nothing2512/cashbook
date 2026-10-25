@@ -14,6 +14,7 @@ const props = defineProps({
 props.setTab("budgets")
 
 const budgets = ref()
+const totalBudget = computed(() => (budgets.value || []).reduce((total, budget) => total + Number(budget.amount || 0), 0))
 const categories = ref()
 const page = ref(1)
 const totalData = ref(0)
@@ -167,6 +168,13 @@ const removeData = async (data) => {
                                             </td>
                                         </tr>
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="3" class="text-end">Total anggaran</th>
+                                            <th>{{ rupiah(totalBudget, props.showData) }}</th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                                 <Pagination :page="page" :total-page="totalPage" :set-page="setPage" />
                             </div>
